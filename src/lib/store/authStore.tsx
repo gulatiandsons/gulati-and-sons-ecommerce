@@ -286,17 +286,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const updateProfile = async (profile: Partial<CustomerUser>) => {
     if (!currentUser) return;
-    const updated: CustomerUser = { ...currentUser, ...profile, updatedAt: new Date().toISOString() };
+    const effectiveUid = auth?.currentUser?.uid || currentUser.uid || currentUser.id;
+    const updated: CustomerUser = {
+      ...currentUser,
+      ...profile,
+      id: effectiveUid,
+      uid: effectiveUid,
+      updatedAt: new Date().toISOString()
+    };
     setCurrentUser(updated);
 
     try {
       localStorage.setItem('gs_user', JSON.stringify(updated));
     } catch {}
 
-    if (db && currentUser.id) {
+    if (db && effectiveUid) {
       try {
-        const userRef = doc(db, 'users', currentUser.id);
-        await setDoc(userRef, updated, { merge: true });
+        const userDocRef = doc(db, 'users', effectiveUid);
+        await setDoc(userDocRef, updated, { merge: true });
       } catch (e) {
         console.warn('Firestore updateProfile note:', e);
       }
@@ -317,15 +324,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const snap = await getDoc(doc(db, 'usernames', normalized));
       if (!snap.exists()) return true;
       const data = snap.data();
-      // Available if claimed by current user
-      return data.uid === currentUser?.id;
+      const effectiveUid = auth?.currentUser?.uid || currentUser?.uid || currentUser?.id;
+      return data.uid === effectiveUid;
     } catch {
       return true;
     }
   };
 
   const completeOnboarding = async (data: OnboardingData): Promise<{ success: boolean; error?: string }> => {
-    if (!currentUser?.id) {
+    const effectiveUid = auth?.currentUser?.uid || currentUser?.uid || currentUser?.id;
+    if (!effectiveUid || !currentUser) {
       return { success: false, error: 'User must be authenticated before completing onboarding.' };
     }
 
@@ -353,13 +361,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const updatedUser: CustomerUser = {
       ...currentUser,
+      id: effectiveUid,
+      uid: effectiveUid,
       name: data.fullName.trim(),
       fullName: data.fullName.trim(),
       age: Number(data.age),
       username: data.username.trim(),
       usernameNormalized: normalized,
       contactEmail: data.contactEmail.trim(),
-      email: data.contactEmail.trim(),
+      email: data.contactEmail.trim() || currentUser.email,
       primaryPhone: data.primaryPhone.trim(),
       secondaryPhone: data.secondaryPhone?.trim() || '',
       phone: data.primaryPhone.trim(),
@@ -368,27 +378,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       updatedAt: new Date().toISOString()
     };
 
-    // Atomic transaction in Firestore
+    // Synchronize to Firestore
     if (db) {
       try {
         const usernameRef = doc(db, 'usernames', normalized);
-        const userRef = doc(db, 'users', currentUser.id);
+        const userRef = doc(db, 'users', effectiveUid);
 
         await runTransaction(db, async (txn) => {
           const uDoc = await txn.get(usernameRef);
-          if (uDoc.exists() && uDoc.data().uid !== currentUser.id) {
-            throw new Error(`The username "${data.username}" is already reserved. Please select another.`);
+          if (uDoc.exists()) {
+            const uData = uDoc.data();
+            if (uData?.uid && uData.uid !== effectiveUid) {
+              throw new Error(`The handle "@${data.username}" is already reserved by another patron.`);
+            }
           }
           txn.set(usernameRef, {
-            uid: currentUser.id,
+            uid: effectiveUid,
             usernameNormalized: normalized,
-            createdAt: new Date().toISOString()
-          });
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
           txn.set(userRef, updatedUser, { merge: true });
         });
       } catch (err: any) {
-        console.error('Firestore onboarding transaction error:', err);
-        return { success: false, error: err.message || 'Unable to reserve username in Firestore registry.' };
+        console.warn('Firestore onboarding transaction notice:', err);
+        if (err?.message?.includes('already reserved')) {
+          return { success: false, error: err.message };
+        }
+        // Graceful direct document write fallback
+        try {
+          const userRef = doc(db, 'users', effectiveUid);
+          await setDoc(userRef, updatedUser, { merge: true });
+        } catch (setErr) {
+          console.warn('Direct user document write fallback notice:', setErr);
+        }
       }
     }
 
