@@ -61,7 +61,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: privateDisallowed,
       },
     ],
-    sitemap: 'https://gulatiandsons.com/sitemap.xml',
-    host: 'https://gulatiandsons.com',
+    sitemap: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://gulatiandsons.com'}/sitemap.xml`,
+    host: process.env.NEXT_PUBLIC_SITE_URL || 'https://gulatiandsons.com',
   };
 }

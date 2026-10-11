@@ -4,7 +4,7 @@ import { PAN_INDIA_REGIONS } from '@/lib/data/deliveryStates';
 import { JOURNAL_ARTICLES } from '@/lib/data/journal';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://gulatiandsons.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://gulatiandsons.com';
   const now = new Date();
 
   // Core static & editorial routes
