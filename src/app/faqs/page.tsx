@@ -1,8 +1,8 @@
-﻿import React from 'react';
+import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { BUSINESS_CONFIG } from '@/lib/config/business';
-
+import { FaqJsonLd } from '@/components/seo/JsonLd';
 
 export const metadata: Metadata = {
   title: 'Frequently Asked Questions | Gulati & Sons',
@@ -35,6 +35,7 @@ export default function FaqsPage() {
 
   return (
     <div className="w-full pt-28 pb-32 px-6 sm:px-10 lg:px-16 max-w-4xl mx-auto space-y-12">
+      <FaqJsonLd questions={faqs.map((f) => ({ question: f.q, answer: f.a }))} />
       <div className="border-b border-[#CCC5B9]/80 pb-8 space-y-2">
         <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
           HELP & ASSISTANCE

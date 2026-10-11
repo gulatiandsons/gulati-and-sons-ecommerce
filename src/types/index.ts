@@ -99,10 +99,13 @@ export interface Order {
     email: string;
     phone: string;
     isGuest: boolean;
+    uid?: string;
   };
+  customerUid?: string;
   shippingAddress: {
     addressLine1: string;
     addressLine2?: string;
+    addressLine3?: string;
     landmark?: string;
     city: string;
     state: string;
@@ -114,37 +117,59 @@ export interface Order {
   discount: number;
   shippingFee: number;
   total: number;
+  amountCollected: number;
+  amountDueOnDelivery: number;
   couponCode?: string;
   giftPackaging?: boolean;
   giftNote?: string;
-  paymentMethod: 'razorpay' | 'upi' | 'card' | 'netbanking' | 'cod';
+  paymentMethod: 'razorpay' | 'upi' | 'card' | 'netbanking' | 'cod' | 'split_shipping';
+  paymentMode: 'cod' | 'online' | 'split_prepay_shipping';
   paymentId?: string;
-  paymentStatus: 'paid' | 'pending' | 'failed' | 'refunded';
+  paymentStatus: 'paid' | 'pending' | 'failed' | 'partial' | 'refunded';
   fulfillmentStatus: 'new' | 'processing' | 'packed' | 'shipped' | 'out_for_delivery' | 'delivered' | 'cancelled';
   timeline: OrderTimelineEvent[];
   adminNotes?: string;
   isDemoOrder: boolean;
+  isBuyNow?: boolean;
+}
+
+export interface CustomerAddress {
+  id: string;
+  isDefault: boolean;
+  addressLine1: string;
+  addressLine2?: string;
+  addressLine3?: string;
+  landmark?: string;
+  city: string;
+  state: string;
+  pincode: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CustomerUser {
   id: string;
+  uid?: string;
   name: string;
+  fullName?: string;
+  username?: string;
+  usernameNormalized?: string;
+  age?: number;
   email: string;
+  authEmail?: string;
+  contactEmail?: string;
   phone?: string;
+  primaryPhone?: string;
+  secondaryPhone?: string;
   role: 'admin' | 'customer';
   ordersCount: number;
   lifetimeSpend: number;
   lastActive: string;
   createdAt: string;
+  updatedAt?: string;
+  onboardingCompleted?: boolean;
   marketingConsent: boolean;
-  addresses: {
-    id: string;
-    isDefault: boolean;
-    addressLine1: string;
-    city: string;
-    state: string;
-    pincode: string;
-  }[];
+  addresses: CustomerAddress[];
   currentCart?: CartItem[];
 }
 

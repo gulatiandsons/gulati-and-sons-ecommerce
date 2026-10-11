@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -52,7 +52,7 @@ export default function TimepieceChapter() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left: Heading & Specifications */}
           <div className="lg:col-span-5 space-y-6">
-            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#C8AD7F] block">
               CHAPTER II. TIME
             </span>
 
@@ -68,7 +68,7 @@ export default function TimepieceChapter() {
             </p>
 
             <div className="p-4 bg-[#252522]/60 border border-[#A58B5F]/40 space-y-2">
-              <div className="flex items-center gap-2 text-xs font-mono text-[#A58B5F] uppercase">
+              <div className="flex items-center gap-2 text-xs font-mono text-[#C8AD7F] uppercase">
                 <Info className="w-4 h-4" /> Selected Horological Specimen
               </div>
               <p className="font-serif text-lg text-[#F3EFE6]">
@@ -167,8 +167,8 @@ export default function TimepieceChapter() {
             </div>
 
             {/* Strict Prototype Disclaimer */}
-            <p className="text-[13px] text-[#E2D9C8]/50 font-mono mt-3 leading-relaxed flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5 text-[#A58B5F] shrink-0" />
+            <p className="text-[13px] text-[#E2D9C8]/80 font-mono mt-3 leading-relaxed flex items-center gap-1.5">
+              <ShieldAlert className="w-3.5 h-3.5 text-[#C8AD7F] shrink-0" />
               Demonstration listing only. Gulati & Sons is not an authorized Rolex retailer and does not claim affiliation.
             </p>
           </div>

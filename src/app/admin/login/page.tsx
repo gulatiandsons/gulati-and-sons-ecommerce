@@ -1,41 +1,56 @@
-﻿'use client';
+'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Lock, Shield, ArrowRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Lock, Shield, ArrowRight, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@/lib/store/authStore';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { loginWithGoogle, isAdmin, currentUser } = useAuth();
-  const [email, setEmail] = useState('yashveer@gulatiandsons.com');
-  const [password, setPassword] = useState('••••••••••••');
+  const { loginWithEmailPassword, isAdmin, currentUser, isLoading } = useAuth();
+  const [email, setEmail] = useState('varungulati.admin@gulatiandsons.com');
+  const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (!isLoading && isAdmin) {
+      router.push('/admin');
+    }
+  }, [isAdmin, isLoading, router]);
+
   const handleAdminSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    if (!email.trim() || !password.trim()) {
+      setErrorMsg('Please enter both administrative email and clearance passkey.');
+      return;
+    }
+
+    // Strict email check
+    if (email.trim().toLowerCase() !== 'varungulati.admin@gulatiandsons.com') {
+      setErrorMsg('Unauthorized identity. This portal is restricted to authorized super administrators.');
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMsg(null);
 
     try {
-      const ok = await loginWithGoogle(true);
+      const ok = await loginWithEmailPassword(email.trim(), password);
       if (ok) {
         router.push('/admin');
+      } else {
+        setErrorMsg('Administrative authentication failed. Please verify credentials.');
       }
-    } catch {
-      setErrorMsg('Administrative verification failed.');
+    } catch (err: any) {
+      setErrorMsg('Invalid administrative credentials or insufficient authorization clearance.');
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleQuickDemoAdmin = async () => {
-    setIsSubmitting(true);
-    await loginWithGoogle(true);
-    router.push('/admin');
   };
 
   return (
@@ -65,7 +80,7 @@ export default function AdminLoginPage() {
             Super Admin Portal
           </h1>
           <p className="text-xs text-[#E2D9C8]/70 font-sans">
-            Dedicated administrative console for Gulati & Sons store operations.
+            Executive management console for Gulati & Sons private store operations.
           </p>
         </div>
 
@@ -86,6 +101,7 @@ export default function AdminLoginPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              placeholder="varungulati.admin@gulatiandsons.com"
               className="w-full px-3.5 py-2.5 bg-[#3C2921] border border-[#A58B5F]/40 text-xs font-mono text-[#F3EFE6] outline-none focus:border-[#A58B5F]"
             />
           </div>
@@ -99,6 +115,7 @@ export default function AdminLoginPage() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter secure master passkey"
               className="w-full px-3.5 py-2.5 bg-[#3C2921] border border-[#A58B5F]/40 text-xs font-mono text-[#F3EFE6] outline-none focus:border-[#A58B5F]"
             />
           </div>
@@ -108,23 +125,14 @@ export default function AdminLoginPage() {
             disabled={isSubmitting}
             className="w-full py-3.5 bg-[#51292D] text-[#F3EFE6] text-xs font-sans uppercase tracking-[0.2em] flex items-center justify-center gap-2 hover:bg-[#A58B5F] hover:text-[#252522] transition-colors border border-[#A58B5F]/30 disabled:opacity-50"
           >
-            <span>Authenticate Administrator</span>
+            <span>{isSubmitting ? 'Authenticating Clearance...' : 'Authenticate Administrator'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </form>
 
-        <div className="space-y-3 pt-4 border-t border-[#A58B5F]/20 text-center">
-          <button
-            onClick={handleQuickDemoAdmin}
-            type="button"
-            className="w-full py-2.5 bg-[#34483D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider hover:bg-[#34483D]/80 transition-colors flex items-center justify-center gap-2"
-          >
-            <Shield className="w-3.5 h-3.5 text-[#A58B5F]" />
-            <span>Instant Demo Super Admin Access</span>
-          </button>
-
-          <p className="text-[12px] text-[#E2D9C8]/50 font-mono">
-            Firebase Google Auth & Custom Admin Role claims enforced.
+        <div className="pt-4 border-t border-[#A58B5F]/20 text-center">
+          <p className="text-[12px] text-[#E2D9C8]/60 font-mono">
+            Firebase Auth Server-Side Verification Enforced. All access attempts audited.
           </p>
         </div>
       </div>

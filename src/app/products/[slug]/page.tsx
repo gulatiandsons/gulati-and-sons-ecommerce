@@ -10,6 +10,7 @@ import {
   Truck,
   Check,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   Sparkles,
   ShieldAlert,
@@ -17,12 +18,14 @@ import {
   Star
 } from 'lucide-react';
 import { useCommerce } from '@/lib/store/commerceStore';
+import { ProductJsonLd, BreadcrumbJsonLd } from '@/components/seo/JsonLd';
+import { CartItem } from '@/types';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
   const slug = params?.slug as string;
-  const { products, addToCart, isInWishlist, toggleWishlist, reviews, addReview } = useCommerce();
+  const { products, addToCart, setBuyNowItem, isInWishlist, toggleWishlist, reviews, addReview } = useCommerce();
 
   const product = products.find((p) => p.slug === slug) || products[0];
 
@@ -41,12 +44,61 @@ export default function ProductDetailPage() {
   const [newReviewRating, setNewReviewRating] = useState(5);
   const [newReviewComment, setNewReviewComment] = useState('');
 
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
   useEffect(() => {
     if (product) {
       setSelectedVariantId(product.variants[0]?.id || '');
-      setActiveImageIdx(0);
+      const mainIdx = product.images.findIndex((img) => img.isMain);
+      setActiveImageIdx(mainIdx >= 0 ? mainIdx : 0);
     }
   }, [product]);
+
+  // 5-second automatic image rotation slideshow
+  useEffect(() => {
+    if (!product || product.images.length <= 1) return;
+
+    // Respect user reduced-motion preference
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      // Pause if browser tab/document is hidden
+      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+      setActiveImageIdx((prev) => (prev + 1) % product.images.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [product, activeImageIdx]);
+
+  const handlePrevImage = () => {
+    if (!product || product.images.length <= 1) return;
+    setActiveImageIdx((prev) => (prev - 1 + product.images.length) % product.images.length);
+  };
+
+  const handleNextImage = () => {
+    if (!product || product.images.length <= 1) return;
+    setActiveImageIdx((prev) => (prev + 1) % product.images.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const touchEndX = e.changedTouches[0].clientX;
+    const deltaX = touchStartX - touchEndX;
+    if (Math.abs(deltaX) > 40) {
+      if (deltaX > 0) {
+        handleNextImage(); // Swiped left -> Next
+      } else {
+        handlePrevImage(); // Swiped right -> Prev
+      }
+    }
+    setTouchStartX(null);
+  };
 
   if (!product) {
     return (
@@ -71,8 +123,22 @@ export default function ProductDetailPage() {
   };
 
   const handleBuyNow = () => {
-    addToCart(product, selectedVariantId, 1);
-    router.push('/checkout');
+    const selectedVariant = product.variants.find((v) => v.id === selectedVariantId) || product.variants[0];
+    const buyItem: CartItem = {
+      id: `${product.id}-${selectedVariant?.id || 'standard'}`,
+      productId: product.id,
+      variantId: selectedVariant?.id,
+      name: product.name,
+      slug: product.slug,
+      image: product.images.find((img) => img.isMain)?.url || product.images[0]?.url || '',
+      price,
+      quantity: 1,
+      variantTitle: selectedVariant?.title,
+      sku: selectedVariant?.sku || product.sku,
+      category: product.category
+    };
+    setBuyNowItem(buyItem);
+    router.push('/checkout?buynow=1');
   };
 
   const checkPincode = (e: React.FormEvent) => {
@@ -106,6 +172,23 @@ export default function ProductDetailPage() {
 
   return (
     <div className="w-full pt-24 pb-28 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto space-y-12">
+      <ProductJsonLd
+        name={product.name}
+        description={product.shortDescription || product.description}
+        image={product.images[0]?.url || ''}
+        price={price}
+        sku={product.sku || product.id}
+        availability={product.stock > 0 ? 'InStock' : 'OutOfStock'}
+        url={`https://gulatiandsons.com/products/${product.slug}`}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', url: 'https://gulatiandsons.com' },
+          { name: product.categoryLabel, url: `https://gulatiandsons.com/collections/${product.category}` },
+          { name: product.name, url: `https://gulatiandsons.com/products/${product.slug}` }
+        ]}
+      />
+
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs font-mono text-[#252522]/60 uppercase tracking-widest">
         <Link href="/" className="hover:text-[#51292D]">Home</Link>
@@ -119,7 +202,11 @@ export default function ProductDetailPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         {/* Left: Product Gallery (60% ~ 7 cols) */}
         <div className="lg:col-span-7 space-y-4">
-          <div className="relative w-full aspect-[4/5] bg-[#E2D9C8] border border-[#CCC5B9]/80 shadow-md overflow-hidden">
+          <div
+            className="relative w-full aspect-[4/5] bg-[#E2D9C8] border border-[#CCC5B9]/80 shadow-md overflow-hidden group select-none"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
             <Image
               src={product.images[activeImageIdx]?.url || product.images[0]?.url || ''}
               alt={product.images[activeImageIdx]?.alt || product.name}
@@ -129,9 +216,47 @@ export default function ProductDetailPage() {
               sizes="(max-width: 1024px) 100vw, 700px"
             />
             {product.isDemonstration && (
-              <div className="absolute top-4 left-4 bg-[#3C2921]/90 text-[#F3EFE6] px-3 py-1 text-[12px] font-mono uppercase tracking-widest">
+              <div className="absolute top-4 left-4 bg-[#3C2921]/90 text-[#F3EFE6] px-3 py-1 text-[12px] font-mono uppercase tracking-widest z-10">
                 Prototype Demonstration
               </div>
+            )}
+
+            {/* Previous and Next Navigation Controls */}
+            {product.images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={handlePrevImage}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#252522]/60 hover:bg-[#51292D] text-[#F3EFE6] flex items-center justify-center transition-all opacity-80 sm:opacity-0 group-hover:opacity-100 z-10 backdrop-blur-sm"
+                  aria-label="Previous gallery image"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleNextImage}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#252522]/60 hover:bg-[#51292D] text-[#F3EFE6] flex items-center justify-center transition-all opacity-80 sm:opacity-0 group-hover:opacity-100 z-10 backdrop-blur-sm"
+                  aria-label="Next gallery image"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+
+                {/* Slideshow progress indicator dot bar */}
+                <div className="absolute bottom-3 inset-x-0 flex justify-center items-center gap-1.5 z-10">
+                  {product.images.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      onClick={() => setActiveImageIdx(i)}
+                      className={`h-1.5 transition-all rounded-full ${
+                        activeImageIdx === i ? 'w-6 bg-[#F3EFE6]' : 'w-1.5 bg-[#F3EFE6]/50'
+                      }`}
+                      aria-label={`Go to slide ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              </>
             )}
           </div>
 
@@ -333,6 +458,7 @@ export default function ProductDetailPage() {
 
           {/* Vertically Expanding Accordions (As specifically instructed by Baymard research) */}
           <div className="border-t border-[#CCC5B9] pt-6 space-y-3">
+            <h2 className="sr-only">Product Dossier, Specifications and Patron Reviews</h2>
             {/* Accordion 1: Description */}
             <div className="border-b border-[#CCC5B9]/60 pb-3">
               <button
@@ -444,7 +570,7 @@ export default function ProductDetailPage() {
                     </button>
                   ) : (
                     <form onSubmit={handleReviewSubmit} className="p-4 bg-[#E2D9C8]/60 border border-[#CCC5B9] space-y-3">
-                      <h4 className="font-serif text-sm">Submit Patron Feedback</h4>
+                      <h3 className="font-serif text-sm">Submit Patron Feedback</h3>
                       <input
                         type="text"
                         placeholder="Your Name and City"

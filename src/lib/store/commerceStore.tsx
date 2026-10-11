@@ -87,112 +87,15 @@ const DEFAULT_COUPONS: Coupon[] = [
   }
 ];
 
-const INITIAL_CUSTOMERS: CustomerUser[] = [
-  {
-    id: 'cust-01',
-    name: 'Yashveer Singh Gulati',
-    email: 'yashveer@gulatiandsons.com',
-    phone: '+91 98110 12345',
-    role: 'admin',
-    ordersCount: 4,
-    lifetimeSpend: 42490,
-    lastActive: 'Just now',
-    createdAt: '2026-01-01T10:00:00Z',
-    marketingConsent: true,
-    addresses: [
-      {
-        id: 'addr-01',
-        isDefault: true,
-        addressLine1: 'The Gulati Residence, 14 Amrita Shergill Marg',
-        city: 'New Delhi',
-        state: 'Delhi',
-        pincode: '110003'
-      }
-    ]
-  },
-  {
-    id: 'cust-02',
-    name: 'Devraj Chauhan',
-    email: 'devraj.chauhan@outlook.com',
-    phone: '+91 98765 43210',
-    role: 'customer',
-    ordersCount: 2,
-    lifetimeSpend: 17498,
-    lastActive: '2 hours ago',
-    createdAt: '2026-02-15T11:20:00Z',
-    marketingConsent: true,
-    addresses: [
-      {
-        id: 'addr-02',
-        isDefault: true,
-        addressLine1: 'Flat 402, Sea Face Apartments, Worli',
-        city: 'Mumbai',
-        state: 'Maharashtra',
-        pincode: '400018'
-      }
-    ]
-  }
-];
+const INITIAL_CUSTOMERS: CustomerUser[] = [];
 
-const INITIAL_ORDERS: Order[] = [
-  {
-    id: 'order-1001',
-    orderNumber: 'GS-8921',
-    createdAt: '2026-10-10T08:00:00.000Z',
-    customer: {
-      name: 'Yashveer Singh Gulati',
-      email: 'yashveer@gulatiandsons.com',
-      phone: '+91 98110 12345',
-      isGuest: false
-    },
-    shippingAddress: {
-      addressLine1: '14 Amrita Shergill Marg',
-      city: 'New Delhi',
-      state: 'Delhi',
-      pincode: '110003',
-      deliveryNote: 'Leave with estate security.'
-    },
-    items: [
-      {
-        productId: 'prod-oud-gold',
-        name: 'Bella Vita Luxury OUD Gold Eau de Parfum',
-        slug: 'bella-vita-luxury-oud-gold-eau-de-parfum',
-        image: 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=600&q=80',
-        price: 2499,
-        quantity: 1,
-        variantTitle: '50 ml',
-        sku: 'GS-PERF-OUD-50'
-      }
-    ],
-    subtotal: 2499,
-    discount: 0,
-    shippingFee: 0,
-    total: 2499,
-    paymentMethod: 'upi',
-    paymentId: 'pay_demo_772189a',
-    paymentStatus: 'paid',
-    fulfillmentStatus: 'processing',
-    timeline: [
-      {
-        status: 'Order Placed',
-        title: 'Order Placed & Verified',
-        timestamp: '10/10/2026, 08:00:00 AM'
-      },
-      {
-        status: 'Processing',
-        title: 'Boutique Packaging in Progress',
-        timestamp: '10/10/2026, 10:00:00 AM'
-      }
-    ],
-    adminNotes: 'VIP patron order. Ensure signature brass seal.',
-    isDemoOrder: true
-  }
-];
+const INITIAL_ORDERS: Order[] = [];
 
 interface CommerceContextType {
   products: Product[];
   trashProducts: Product[];
   cart: CartItem[];
+  buyNowItem: CartItem | null;
   wishlist: string[];
   orders: Order[];
   customers: CustomerUser[];
@@ -213,6 +116,7 @@ interface CommerceContextType {
   setQuickViewProduct: (product: Product | null) => void;
   showToast: (msg: string) => void;
 
+  setBuyNowItem: (item: CartItem | null) => void;
   addToCart: (product: Product, variantId?: string, quantity?: number) => void;
   removeFromCart: (itemId: string) => void;
   updateCartQuantity: (itemId: string, quantity: number) => void;
@@ -253,6 +157,7 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
   const [products, setProducts] = useState<Product[]>(SEED_PRODUCTS);
   const [trashProducts, setTrashProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [buyNowItem, setBuyNowItem] = useState<CartItem | null>(null);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS);
   const [customers, setCustomers] = useState<CustomerUser[]>(INITIAL_CUSTOMERS);
@@ -443,6 +348,30 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
 
   const placeOrder = (orderData: Partial<Order>): Order => {
     const orderNumber = `${settings.orderIdPrefix}${Math.floor(1000 + Math.random() * 9000)}`;
+    const subtotal = orderData.subtotal || 0;
+    const discount = orderData.discount || 0;
+    const shippingFee = orderData.shippingFee || 0;
+    const total = orderData.total || Math.max(0, subtotal - discount + shippingFee);
+
+    const paymentMode = orderData.paymentMode || 'cod';
+    let amountCollected = 0;
+    let amountDueOnDelivery = total;
+    let paymentStatus: Order['paymentStatus'] = 'pending';
+
+    if (paymentMode === 'online') {
+      amountCollected = total;
+      amountDueOnDelivery = 0;
+      paymentStatus = 'paid';
+    } else if (paymentMode === 'split_prepay_shipping') {
+      amountCollected = shippingFee;
+      amountDueOnDelivery = Math.max(0, subtotal - discount);
+      paymentStatus = 'partial';
+    } else {
+      amountCollected = 0;
+      amountDueOnDelivery = total;
+      paymentStatus = 'pending';
+    }
+
     const newOrder: Order = {
       id: 'ord-' + Date.now(),
       orderNumber,
@@ -453,6 +382,7 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
         phone: '+91 98000 00000',
         isGuest: true
       },
+      customerUid: orderData.customerUid,
       shippingAddress: orderData.shippingAddress || {
         addressLine1: 'Address',
         city: 'City',
@@ -460,30 +390,43 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
         pincode: '110001'
       },
       items: orderData.items || [],
-      subtotal: orderData.subtotal || 0,
-      discount: orderData.discount || 0,
-      shippingFee: orderData.shippingFee || 0,
-      total: orderData.total || 0,
+      subtotal,
+      discount,
+      shippingFee,
+      total,
+      amountCollected,
+      amountDueOnDelivery,
       couponCode: orderData.couponCode,
       giftPackaging: orderData.giftPackaging,
       giftNote: orderData.giftNote,
-      paymentMethod: orderData.paymentMethod || 'upi',
-      paymentId: orderData.paymentId || `pay_demo_${Date.now().toString(36)}`,
-      paymentStatus: 'paid',
+      paymentMethod: orderData.paymentMethod || (paymentMode === 'online' ? 'razorpay' : paymentMode === 'split_prepay_shipping' ? 'split_shipping' : 'cod'),
+      paymentMode,
+      paymentId: orderData.paymentId || (paymentMode === 'cod' ? undefined : `pay_demo_${Date.now().toString(36)}`),
+      paymentStatus,
       fulfillmentStatus: 'new',
       timeline: [
         {
           status: 'Order Placed',
-          title: 'Order Confirmed',
+          title: paymentMode === 'split_prepay_shipping'
+            ? 'Order Confirmed (Shipping Prepaid Online)'
+            : paymentMode === 'online'
+            ? 'Order Confirmed (Fully Paid Online)'
+            : 'Order Confirmed (White-Glove Payment Due on Delivery)',
           timestamp: new Date().toLocaleString('en-IN')
         }
       ],
-      adminNotes: 'Simulated order placed via Demo Mode.',
-      isDemoOrder: true
+      adminNotes: orderData.adminNotes || `Acquisition authorized under ${paymentMode.toUpperCase()} mode.`,
+      isDemoOrder: true,
+      isBuyNow: orderData.isBuyNow
     };
 
     setOrders((prev) => [newOrder, ...prev]);
-    clearCart();
+
+    if (orderData.isBuyNow) {
+      setBuyNowItem(null);
+    } else {
+      clearCart();
+    }
 
     // Deduct stock safely
     newOrder.items.forEach((item) => {
@@ -503,7 +446,7 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
       {
         id: 'notif-' + Date.now(),
         title: 'New Order Received',
-        message: `Order #${newOrder.orderNumber} placed for ₹${newOrder.total.toLocaleString('en-IN')}`,
+        message: `Order #${newOrder.orderNumber} (${paymentMode.toUpperCase()}) placed for ₹${newOrder.total.toLocaleString('en-IN')}`,
         type: 'order',
         read: false,
         timestamp: 'Just now',
@@ -512,7 +455,7 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
       ...prev
     ]);
 
-    addAuditLog('Order Created', `Order #${newOrder.orderNumber} confirmed by ${newOrder.customer.name}`);
+    addAuditLog('Order Created', `Order #${newOrder.orderNumber} confirmed by ${newOrder.customer.name} (${paymentMode})`);
     return newOrder;
   };
 
@@ -683,6 +626,8 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
         products,
         trashProducts,
         cart,
+        buyNowItem,
+        setBuyNowItem,
         wishlist,
         orders,
         customers,

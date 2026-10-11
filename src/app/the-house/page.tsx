@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -57,7 +57,7 @@ export default function TheHousePage() {
         <p className="font-serif text-2xl sm:text-3xl italic font-normal">
           &ldquo;Luxury through restraint. Beautiful materials, considered spacing, and quiet typography.&rdquo;
         </p>
-        <span className="text-xs font-mono text-[#A58B5F] uppercase tracking-widest block">
+        <span className="text-xs font-mono text-[#C8AD7F] font-medium uppercase tracking-widest block">
           The Five House Principles
         </span>
       </div>

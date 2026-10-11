@@ -52,6 +52,7 @@ import { Product, Order, CmsSectionBlock, Coupon } from '@/types';
 export default function SuperAdminDashboard() {
   const router = useRouter();
   const {
+    cart,
     products,
     trashProducts,
     orders,
@@ -81,7 +82,13 @@ export default function SuperAdminDashboard() {
     showToast
   } = useCommerce();
 
-  const { isAdmin, logout } = useAuth();
+  const { isAdmin, currentUser, isLoading, logout } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && !isAdmin) {
+      router.push('/admin/login');
+    }
+  }, [isAdmin, isLoading, router]);
 
   // Active module navigation
   const [activeModule, setActiveModule] = useState<
@@ -117,6 +124,18 @@ export default function SuperAdminDashboard() {
   // Selected sub-entities for editing/viewing
   const [selectedOrderForModal, setSelectedOrderForModal] = useState<Order | null>(null);
   const [selectedProductForEdit, setSelectedProductForEdit] = useState<Product | null>(null);
+  const [editingImages, setEditingImages] = useState<{ url: string; alt: string; isMain?: boolean }[]>([]);
+  const [newGalleryUrl, setNewGalleryUrl] = useState('');
+  const [newGalleryAlt, setNewGalleryAlt] = useState('');
+
+  useEffect(() => {
+    if (selectedProductForEdit) {
+      setEditingImages([...selectedProductForEdit.images]);
+      setNewGalleryUrl('');
+      setNewGalleryAlt('');
+    }
+  }, [selectedProductForEdit]);
+
   const [editingCmsSection, setEditingCmsSection] = useState<CmsSectionBlock | null>(null);
 
   // Founder CMS form state
@@ -150,39 +169,46 @@ export default function SuperAdminDashboard() {
   const [newCouponVal, setNewCouponVal] = useState(10);
   const [newCouponMin, setNewCouponMin] = useState(2000);
 
-  // Abandoned / active cart simulated patrons
-  const activeCartUsers = [
+  // Active cart patrons (Dynamic based on live cart activity)
+  const activeCartUsers = cart.length > 0 ? [
     {
-      id: 'cu-1',
-      name: 'Yashveer Singh Gulati',
-      email: 'yashveer@gulatiandsons.com',
-      phone: '+91 98110 12345',
-      itemsCount: 1,
-      cartValue: 2499,
-      lastActive: '12 minutes ago',
-      itemNames: ['Bella Vita Luxury OUD Gold (50 ml)'],
-      isRegistered: true
-    },
-    {
-      id: 'cu-2',
-      name: 'Aaditya Singhania',
-      email: 'aaditya.singhania@heritage.co',
-      phone: '+91 98200 88219',
-      itemsCount: 2,
-      cartValue: 17498,
-      lastActive: '45 minutes ago',
-      itemNames: ['Heritage Nappa Leather Moto Jacket (Size L)', 'Bella Vita OUD Gold'],
-      isRegistered: true
+      id: 'cu-live',
+      name: currentUser?.fullName || currentUser?.name || 'Active Session Patron',
+      email: currentUser?.contactEmail || currentUser?.email || 'patron.session@gulatiandsons.com',
+      phone: currentUser?.primaryPhone || currentUser?.phone || '+91 83750 44808',
+      itemsCount: cart.length,
+      cartValue: cart.reduce((sum: number, item) => sum + item.price * item.quantity, 0),
+      lastActive: 'Active now',
+      itemNames: cart.map((i) => i.name),
+      isRegistered: Boolean(currentUser)
     }
-  ];
+  ] : [];
 
   // Business statistics
   const totalRevenue = orders
     .filter((o) => o.paymentStatus === 'paid')
     .reduce((sum, o) => sum + o.total, 0);
 
-  const pendingOrdersCount = orders.filter((o) => o.fulfillmentStatus === 'new' || o.fulfillmentStatus === 'processing').length;
-  const lowStockCount = products.filter((p) => p.stock <= p.lowStockThreshold).length;
+  const lowStockCount = products.filter((p) => p.stock <= (p.lowStockThreshold || 5)).length;
+
+  const pendingOrdersCount = orders.filter(
+    (o) => o.fulfillmentStatus === 'new' || o.fulfillmentStatus === 'processing'
+  ).length;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#3C2921] text-[#F3EFE6] flex items-center justify-center select-none font-mono text-xs uppercase tracking-widest">
+        <div className="text-center space-y-3 text-[#A58B5F]">
+          <div className="w-8 h-8 border-2 border-[#A58B5F] border-t-transparent rounded-full animate-spin mx-auto" />
+          <p>Verifying Clearance...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-[#F3EFE6] text-[#252522] flex flex-col font-sans select-none">
@@ -494,8 +520,8 @@ export default function SuperAdminDashboard() {
             {/* User footer in Drawer */}
             <div className="pt-4 border-t border-[#A58B5F]/20 flex items-center justify-between text-xs font-mono">
               <div>
-                <p className="text-[#F3EFE6] font-medium">Yashveer Singh</p>
-                <span className="text-[12px] text-[#A58B5F]">Owner / Super Admin</span>
+                <p className="text-[#F3EFE6] font-medium">{currentUser?.fullName || currentUser?.name || 'Varun Gulati'}</p>
+                <span className="text-[12px] text-[#A58B5F]">Managing Director & Founder</span>
               </div>
               <button
                 onClick={() => {
@@ -700,8 +726,8 @@ export default function SuperAdminDashboard() {
           {/* Bottom user card */}
           <div className="pt-4 border-t border-[#A58B5F]/20 flex items-center justify-between text-xs font-mono">
             <div>
-              <p className="text-[#F3EFE6] font-medium">Yashveer Singh</p>
-              <span className="text-[12px] text-[#A58B5F]">Owner / Super Admin</span>
+              <p className="text-[#F3EFE6] font-medium">{currentUser?.fullName || currentUser?.name || 'Varun Gulati'}</p>
+              <span className="text-[12px] text-[#A58B5F]">Managing Director & Founder</span>
             </div>
             <button
               onClick={() => {
@@ -1620,6 +1646,26 @@ export default function SuperAdminDashboard() {
                       </div>
                     </div>
 
+                    {/* Financial Settlement Breakdown */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-mono bg-[#F3EFE6] p-3 border border-[#CCC5B9]">
+                      <div>
+                        <span className="text-[#252522]/50 uppercase block">Settlement Mode</span>
+                        <span className="font-semibold text-[#51292D] uppercase">{selectedOrderForModal.paymentMode || selectedOrderForModal.paymentMethod}</span>
+                      </div>
+                      <div>
+                        <span className="text-[#252522]/50 uppercase block">Total Value</span>
+                        <span className="font-semibold text-[#252522]">₹{selectedOrderForModal.total.toLocaleString('en-IN')}</span>
+                      </div>
+                      <div>
+                        <span className="text-[#252522]/50 uppercase block">Collected Online</span>
+                        <span className="font-semibold text-[#34483D]">₹{(selectedOrderForModal.amountCollected || 0).toLocaleString('en-IN')}</span>
+                      </div>
+                      <div>
+                        <span className="text-[#252522]/50 uppercase block">COD Balance Due</span>
+                        <span className="font-semibold text-[#51292D]">₹{(selectedOrderForModal.amountDueOnDelivery || 0).toLocaleString('en-IN')}</span>
+                      </div>
+                    </div>
+
                     {/* Frozen Product Snapshots */}
                     <div className="space-y-2">
                       <span className="text-xs font-mono uppercase text-[#252522]/70 block">Commissioned Pieces</span>
@@ -2140,7 +2186,8 @@ export default function SuperAdminDashboard() {
                           images: [
                             {
                               url: newProductImageUrl || 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=1200&q=85',
-                              alt: newProductName
+                              alt: newProductName || 'Gulati & Sons Collection Item',
+                              isMain: true
                             }
                           ],
                           isIndexable: true,
@@ -2216,6 +2263,16 @@ export default function SuperAdminDashboard() {
                           onBlur={(e) => quickUpdateStock(p.id, Number(e.target.value))}
                           className="w-20 px-2 py-1.5 bg-[#E2D9C8]/40 border border-[#CCC5B9] text-xs font-mono text-center outline-none focus:border-[#51292D]"
                         />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => setSelectedProductForEdit(p)}
+                          className="px-3 py-1.5 bg-[#3C2921] hover:bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider transition-colors flex items-center gap-1.5 min-h-[38px]"
+                          title="Manage product photography gallery"
+                        >
+                          <Eye className="w-3.5 h-3.5 text-[#A58B5F]" />
+                          <span>Gallery ({p.images.length}/6)</span>
+                        </button>
                       </div>
                       <button
                         onClick={() => deleteProduct(p.id)}
@@ -2621,6 +2678,265 @@ export default function SuperAdminDashboard() {
                 <div className="p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9]">
                   <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Top Category by Sales</span>
                   <span className="font-serif text-2xl text-[#34483D] mt-2 block">Artisanal Fragrance</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Product Photography Gallery Management Modal */}
+          {selectedProductForEdit && (
+            <div className="fixed inset-0 z-50 bg-[#252522]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+              <div className="w-full max-w-3xl bg-[#F3EFE6] border border-[#A58B5F]/40 p-5 sm:p-8 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto">
+                {/* Header */}
+                <div className="flex justify-between items-center border-b border-[#CCC5B9]/80 pb-3">
+                  <div>
+                    <span className="text-[12px] font-mono uppercase text-[#A58B5F]">
+                      Gallery Studio
+                    </span>
+                    <h3 className="font-serif text-2xl text-[#252522]">
+                      {selectedProductForEdit.name}
+                    </h3>
+                    <p className="text-xs font-mono text-[#252522]/60 mt-0.5">
+                      Gallery: {editingImages.length} of 6 images configured. 1–6 images permitted. Exactly 1 photo is designated as Main Cover.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedProductForEdit(null)}
+                    className="text-[#252522]/60 hover:text-[#51292D] p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                    aria-label="Close modal"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Existing Images */}
+                <div className="space-y-3">
+                  <span className="text-xs font-mono uppercase tracking-wider text-[#252522]/80 block font-semibold">
+                    Curated Images Sequence ({editingImages.length}/6)
+                  </span>
+
+                  {editingImages.map((img, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-3 border transition-colors flex flex-col sm:flex-row sm:items-center gap-3 ${
+                        img.isMain
+                          ? 'bg-[#E2D9C8]/70 border-[#51292D] ring-1 ring-[#51292D]/40'
+                          : 'bg-[#F3EFE6] border-[#CCC5B9]'
+                      }`}
+                    >
+                      {/* Thumbnail */}
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#252522]/10 relative shrink-0 border border-[#CCC5B9] overflow-hidden">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={img.url}
+                          alt={img.alt || `Photo ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=300&q=80';
+                          }}
+                        />
+                        {img.isMain && (
+                          <span className="absolute top-1 left-1 bg-[#51292D] text-[#F3EFE6] text-[9px] font-mono uppercase px-1 py-0.5 font-bold">
+                            Main
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Inputs */}
+                      <div className="flex-1 space-y-2 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-mono text-[#252522]/50 shrink-0">#{idx + 1}</span>
+                          <input
+                            type="url"
+                            value={img.url}
+                            onChange={(e) => {
+                              const next = [...editingImages];
+                              next[idx].url = e.target.value;
+                              setEditingImages(next);
+                            }}
+                            placeholder="Image URL (https://...)"
+                            className="w-full px-2 py-1 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-mono outline-none"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          value={img.alt}
+                          onChange={(e) => {
+                            const next = [...editingImages];
+                            next[idx].alt = e.target.value;
+                            setEditingImages(next);
+                          }}
+                          placeholder="Accessible Alt description..."
+                          className="w-full px-2 py-1 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-sans outline-none"
+                        />
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex sm:flex-col items-center justify-between sm:justify-center gap-1.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#CCC5B9]/40">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const next = editingImages.map((item, i) => ({
+                              ...item,
+                              isMain: i === idx
+                            }));
+                            setEditingImages(next);
+                          }}
+                          className={`px-2.5 py-1 text-[11px] font-mono uppercase tracking-wider transition-colors min-h-[32px] flex items-center gap-1 ${
+                            img.isMain
+                              ? 'bg-[#51292D] text-[#F3EFE6] font-bold'
+                              : 'bg-[#CCC5B9]/40 hover:bg-[#CCC5B9] text-[#252522]'
+                          }`}
+                          title="Designate as primary catalog image"
+                        >
+                          <Star className={`w-3 h-3 ${img.isMain ? 'fill-current text-[#A58B5F]' : ''}`} />
+                          <span>{img.isMain ? 'Main Cover' : 'Set as Main'}</span>
+                        </button>
+
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            disabled={idx === 0}
+                            onClick={() => {
+                              const next = [...editingImages];
+                              const temp = next[idx - 1];
+                              next[idx - 1] = next[idx];
+                              next[idx] = temp;
+                              setEditingImages(next);
+                            }}
+                            className="p-1.5 bg-[#F3EFE6] border border-[#CCC5B9] hover:bg-[#CCC5B9]/40 disabled:opacity-30 transition-colors"
+                            title="Move Up"
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={idx === editingImages.length - 1}
+                            onClick={() => {
+                              const next = [...editingImages];
+                              const temp = next[idx + 1];
+                              next[idx + 1] = next[idx];
+                              next[idx] = temp;
+                              setEditingImages(next);
+                            }}
+                            className="p-1.5 bg-[#F3EFE6] border border-[#CCC5B9] hover:bg-[#CCC5B9]/40 disabled:opacity-30 transition-colors"
+                            title="Move Down"
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            type="button"
+                            disabled={editingImages.length <= 1}
+                            onClick={() => {
+                              if (editingImages.length <= 1) return;
+                              const next = editingImages.filter((_, i) => i !== idx);
+                              if (img.isMain && next.length > 0) {
+                                next[0].isMain = true;
+                              }
+                              setEditingImages(next);
+                            }}
+                            className="p-1.5 text-[#51292D] hover:bg-[#51292D] hover:text-[#F3EFE6] border border-[#CCC5B9] disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#51292D] transition-colors"
+                            title={editingImages.length <= 1 ? "At least 1 image is required" : "Remove photo"}
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Add Image Row */}
+                {editingImages.length < 6 ? (
+                  <div className="p-4 bg-[#E2D9C8]/40 border border-[#CCC5B9] space-y-3">
+                    <span className="text-xs font-mono uppercase tracking-wider text-[#51292D] block font-semibold">
+                      Add New Photography ({editingImages.length} of 6 configured)
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-mono uppercase text-[#252522]/70 mb-1">Image URL</label>
+                        <input
+                          type="url"
+                          value={newGalleryUrl}
+                          onChange={(e) => setNewGalleryUrl(e.target.value)}
+                          placeholder="https://images.unsplash.com/..."
+                          className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-mono outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-mono uppercase text-[#252522]/70 mb-1">Alt Description</label>
+                        <input
+                          type="text"
+                          value={newGalleryAlt}
+                          onChange={(e) => setNewGalleryAlt(e.target.value)}
+                          placeholder="Editorial caption / angle..."
+                          className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-sans outline-none"
+                        />
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!newGalleryUrl.trim()) return;
+                        const next = [
+                          ...editingImages,
+                          {
+                            url: newGalleryUrl.trim(),
+                            alt: newGalleryAlt.trim() || selectedProductForEdit.name,
+                            isMain: editingImages.length === 0
+                          }
+                        ];
+                        setEditingImages(next);
+                        setNewGalleryUrl('');
+                        setNewGalleryAlt('');
+                      }}
+                      disabled={!newGalleryUrl.trim() || editingImages.length >= 6}
+                      className="px-4 py-2 bg-[#3C2921] hover:bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider disabled:opacity-40 transition-colors flex items-center gap-1.5"
+                    >
+                      <PlusCircle className="w-4 h-4" />
+                      <span>Append to Gallery</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-3 bg-[#E2D9C8]/40 border border-[#CCC5B9] text-xs font-mono text-[#51292D]">
+                    Maximum gallery capacity reached (6 of 6 images). Remove an existing photo to upload a replacement.
+                  </div>
+                )}
+
+                {/* Footer Controls */}
+                <div className="flex items-center justify-between pt-4 border-t border-[#CCC5B9]/80">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedProductForEdit(null)}
+                    className="px-6 py-2.5 border border-[#CCC5B9] text-xs font-mono uppercase text-[#252522] hover:bg-[#CCC5B9]/30 min-h-[44px]"
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (editingImages.length < 1 || editingImages.length > 6) {
+                        alert('Gallery must contain between 1 and 6 images.');
+                        return;
+                      }
+                      const verifiedImages = [...editingImages];
+                      if (!verifiedImages.some((i) => i.isMain)) {
+                        verifiedImages[0].isMain = true;
+                      }
+                      const updatedProduct: Product = {
+                        ...selectedProductForEdit,
+                        images: verifiedImages,
+                        updatedAt: new Date().toISOString()
+                      };
+                      saveProduct(updatedProduct);
+                      setSelectedProductForEdit(null);
+                    }}
+                    className="px-8 py-2.5 bg-[#51292D] hover:bg-[#3C2921] text-[#F3EFE6] text-xs font-mono uppercase tracking-widest min-h-[44px] flex items-center gap-2"
+                  >
+                    <Check className="w-4 h-4 text-[#A58B5F]" />
+                    <span>Save Gallery ({editingImages.length} Images)</span>
+                  </button>
                 </div>
               </div>
             </div>

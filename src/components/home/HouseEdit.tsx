@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -42,7 +42,7 @@ export default function HouseEdit() {
               className={`pb-2 px-3 text-xs uppercase tracking-[0.2em] font-sans transition-all relative ${
                 activeTab === 'all'
                   ? 'text-[#51292D] font-medium border-b-2 border-[#51292D]'
-                  : 'text-[#252522]/60 hover:text-[#252522]'
+                  : 'text-[#4A453E] hover:text-[#252522]'
               }`}
             >
               Complete Edit
@@ -52,7 +52,7 @@ export default function HouseEdit() {
               className={`pb-2 px-3 text-xs uppercase tracking-[0.2em] font-sans transition-all relative ${
                 activeTab === 'fragrances'
                   ? 'text-[#51292D] font-medium border-b-2 border-[#51292D]'
-                  : 'text-[#252522]/60 hover:text-[#252522]'
+                  : 'text-[#4A453E] hover:text-[#252522]'
               }`}
             >
               Fragrance
@@ -62,7 +62,7 @@ export default function HouseEdit() {
               className={`pb-2 px-3 text-xs uppercase tracking-[0.2em] font-sans transition-all relative ${
                 activeTab === 'watches'
                   ? 'text-[#51292D] font-medium border-b-2 border-[#51292D]'
-                  : 'text-[#252522]/60 hover:text-[#252522]'
+                  : 'text-[#4A453E] hover:text-[#252522]'
               }`}
             >
               Timepieces
@@ -72,7 +72,7 @@ export default function HouseEdit() {
               className={`pb-2 px-3 text-xs uppercase tracking-[0.2em] font-sans transition-all relative ${
                 activeTab === 'clothing'
                   ? 'text-[#51292D] font-medium border-b-2 border-[#51292D]'
-                  : 'text-[#252522]/60 hover:text-[#252522]'
+                  : 'text-[#4A453E] hover:text-[#252522]'
               }`}
             >
               Clothing Atelier

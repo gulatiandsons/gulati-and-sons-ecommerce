@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -53,7 +53,7 @@ export default function CollectionsGateway() {
 
                 {/* Card Content Overlay */}
                 <div className="absolute inset-0 p-8 flex flex-col justify-end text-[#F3EFE6]">
-                  <span className="text-[12px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] mb-1">
+                  <span className="text-[12px] font-mono uppercase tracking-[0.25em] text-[#C8AD7F] mb-1">
                     The House Selection
                   </span>
                   <div className="flex items-center justify-between">

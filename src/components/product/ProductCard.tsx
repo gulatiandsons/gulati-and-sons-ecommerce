@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -15,8 +15,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { isInWishlist, toggleWishlist, setQuickViewProduct } = useCommerce();
   const inWishlist = isInWishlist(product.id);
 
-  const mainImage = product.images[0]?.url || '';
-  const hoverImage = product.images[1]?.url || mainImage;
+  const designatedMain = product.images.find((img) => img.isMain) || product.images[0];
+  const mainImage = designatedMain?.url || '';
+  const galleryImages = product.images.filter((img) => img !== designatedMain);
+  const hoverImage = galleryImages[0]?.url || mainImage;
 
   return (
     <article aria-label={product.name} className="group relative bg-[#F3EFE6] flex flex-col justify-between">
@@ -78,7 +80,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product Information */}
       <div className="pt-4 flex flex-col justify-between flex-1 space-y-1">
         <div>
-          <span className="text-[12px] font-mono uppercase tracking-[0.2em] text-[#A58B5F] block">
+          <span className="text-[12px] font-mono uppercase tracking-[0.2em] text-[#7A5E2E] font-medium block">
             {product.categoryLabel}
           </span>
           <h3 className="font-serif text-base sm:text-lg text-[#252522] group-hover:text-[#51292D] transition-colors leading-snug line-clamp-1 mt-0.5">
@@ -86,7 +88,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.name}
             </Link>
           </h3>
-          <p className="text-xs text-[#252522]/60 line-clamp-1 font-sans">
+          <p className="text-xs text-[#252522]/80 line-clamp-1 font-sans">
             {product.shortDescription}
           </p>
         </div>
@@ -97,7 +99,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               ₹{product.price.toLocaleString('en-IN')}
             </span>
             {product.mrp > product.price && (
-              <span className="text-xs text-[#252522]/50 line-through font-mono">
+              <span className="text-xs text-[#252522]/70 line-through font-mono">
                 ₹{product.mrp.toLocaleString('en-IN')}
               </span>
             )}

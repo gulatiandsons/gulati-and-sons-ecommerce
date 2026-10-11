@@ -10,7 +10,7 @@ import { useAuth } from '@/lib/store/authStore';
 
 export default function Header() {
   const pathname = usePathname();
-  const { cart, wishlist, setIsCartOpen, setIsSearchOpen } = useCommerce();
+  const { cart, wishlist, setIsCartOpen, setIsSearchOpen, settings } = useCommerce();
   const { currentUser, isAdmin } = useAuth();
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -58,6 +58,15 @@ export default function Header() {
           : 'translate-y-0 opacity-100 pointer-events-auto bg-[#F3EFE6]/95 backdrop-blur-md text-[#252522] border-b border-[#A58B5F]/20 shadow-sm'
       }`}
     >
+      {/* Integrated Announcement Bar inside fixed header (Zero CLS) */}
+      {settings.showAnnouncement && settings.announcementText && (
+        <aside aria-label="Announcement" className="bg-[#3C2921] text-[#E2D9C8] text-[13px] sm:text-xs tracking-[0.2em] uppercase py-2 px-4 text-center font-sans border-b border-[#A58B5F]/20">
+          <div className="max-w-7xl mx-auto flex items-center justify-center gap-3">
+            <span>{settings.announcementText}</span>
+          </div>
+        </aside>
+      )}
+
       {/* Top utility row */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Left: Mobile hamburger & Region currency */}
@@ -141,10 +150,10 @@ export default function Header() {
           <button
             onClick={() => setIsCartOpen(true)}
             className="p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-current hover:text-[#51292D] transition-colors gap-1.5 relative"
-            aria-label="Shopping bag"
+            aria-label={mounted ? `Shopping bag (${totalCartCount})` : 'Shopping bag (0)'}
           >
-            <ShoppingBag className="w-5 h-5" />
-            <span className="text-xs font-mono font-medium">{mounted ? totalCartCount : 0}</span>
+            <ShoppingBag className="w-5 h-5" aria-hidden="true" />
+            <span className="text-xs font-mono font-medium" aria-hidden="true">{mounted ? totalCartCount : 0}</span>
           </button>
         </div>
       </div>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" fill="#51292D"/>
+  <circle cx="256" cy="256" r="236" fill="none" stroke="#A58B5F" stroke-width="4"/>
+  <circle cx="256" cy="256" r="226" fill="none" stroke="#A58B5F" stroke-width="1.5" stroke-dasharray="8 6"/>
+  <text x="256" y="275" font-family="'Cormorant Garamond', serif, 'Times New Roman'" font-size="160" font-weight="600" fill="#F3EFE6" text-anchor="middle" letter-spacing="4">G&amp;S</text>
+  <text x="256" y="340" font-family="'IBM Plex Mono', monospace, sans-serif" font-size="28" font-weight="500" fill="#A58B5F" text-anchor="middle" letter-spacing="8">EST. IN TASTE</text>
+</svg>

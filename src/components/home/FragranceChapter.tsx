@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -121,12 +121,12 @@ export default function FragranceChapter() {
         <div className="bg-[#E2D9C8]/50 border border-[#CCC5B9] p-8 sm:p-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-[#CCC5B9]/60 pb-6">
             <div>
-              <span className="text-[12px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] flex items-center gap-1.5">
-                <Sparkles className="w-3 h-3" /> The Scent Library
+              <span className="text-[12px] font-mono uppercase tracking-[0.25em] text-[#7A5E2E] font-medium flex items-center gap-1.5">
+                <Sparkles className="w-3 h-3 text-[#7A5E2E]" /> The Scent Library
               </span>
               <h3 className="font-serif text-2xl text-[#252522] mt-1">Explore by Fragrance Character</h3>
             </div>
-            <span className="text-xs text-[#252522]/60 font-mono">Select a character profile to refine olfactory notes</span>
+            <span className="text-xs text-[#252522]/80 font-mono">Select a character profile to refine olfactory notes</span>
           </div>
 
           {/* Character selection buttons */}
@@ -143,7 +143,7 @@ export default function FragranceChapter() {
               >
                 <span className="block font-serif text-base">{profile.label}</span>
                 <span className={`text-[12px] font-mono uppercase tracking-wider block mt-1 ${
-                  selectedProfile.id === profile.id ? 'text-[#A58B5F]' : 'text-[#252522]/50'
+                  selectedProfile.id === profile.id ? 'text-[#C8AD7F]' : 'text-[#252522]/75'
                 }`}>
                   Aromatic Accord
                 </span>

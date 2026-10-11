@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -52,11 +52,11 @@ export default function EverydayRitual() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#252522]/50 via-transparent to-transparent pointer-events-none" />
 
               <div className="absolute bottom-6 left-6 text-[#F3EFE6]">
-                <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                <span className="text-[12px] font-mono uppercase tracking-widest text-[#C8AD7F]">
                   Formulation Format
                 </span>
-                <h4 className="font-serif text-xl sm:text-2xl mt-0.5">{selectedFormat.name}</h4>
-                <p className="text-xs font-mono text-[#E2D9C8]/80 mt-1">{selectedFormat.volume}</p>
+                <h3 className="font-serif text-xl sm:text-2xl mt-0.5">{selectedFormat.name}</h3>
+                <p className="text-xs font-mono text-[#E2D9C8]/90 mt-1">{selectedFormat.volume}</p>
               </div>
             </div>
           </div>

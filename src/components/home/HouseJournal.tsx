@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -55,7 +55,7 @@ export default function HouseJournal() {
               </Link>
 
               <div className="space-y-2">
-                <div className="flex items-center gap-3 text-[12px] font-mono text-[#A58B5F] uppercase tracking-widest">
+                <div className="flex items-center gap-3 text-[12px] font-mono text-[#7A5E2E] font-medium uppercase tracking-widest">
                   <span>{article.category}</span>
                   <span>·</span>
                   <span>{article.readTime}</span>
@@ -67,7 +67,7 @@ export default function HouseJournal() {
                   </Link>
                 </h3>
 
-                <p className="text-xs text-[#252522]/70 font-sans line-clamp-2 leading-relaxed">
+                <p className="text-xs text-[#252522]/80 font-sans line-clamp-2 leading-relaxed">
                   {article.summary}
                 </p>
               </div>

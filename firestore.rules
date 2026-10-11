@@ -7,94 +7,63 @@ service cloud.firestore {
       return request.auth != null;
     }
 
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email == 'varungulati.admin@gulatiandsons.com' ||
+        request.auth.token.admin == true
+      );
+    }
+
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // Role verification: Relies on server-controlled custom claims or verified admin document
-    function isAdmin() {
-      return isAuthenticated() && (
-        request.auth.token.admin == true ||
-        exists(/databases/$(database)/documents/admin_roles/$(request.auth.uid))
-      );
-    }
-
-    // Products: Public can read active products. Only verified Admins can create/update/delete.
-    match /products/{productId} {
-      allow read: if resource.data.status == 'active' || isAdmin();
-      allow write: if isAdmin();
-    }
-
-    // Categories: Public can read. Admin can write.
-    match /categories/{categoryId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Orders:
-    // Customers can read only their own orders.
-    // Customers can create an order with initial 'pending' payment status.
-    // Crucially: Only Admins or trusted backend can change paymentStatus to 'paid' or fulfillmentStatus.
-    match /orders/{orderId} {
-      allow read: if isAdmin() || (isAuthenticated() && resource.data.customer.uid == request.auth.uid);
-      allow create: if true; // Allows guest checkout creation with initial 'pending' state
-      allow update, delete: if isAdmin();
-    }
-
-    // Customer Profiles:
-    // Customers can read and update only their own profile.
-    // Customers CANNOT modify their own 'role' field (prevents self-promotion to admin).
+    // User Profile Rules
     match /users/{userId} {
       allow read: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId) && request.resource.data.role == 'customer';
-      allow update: if isOwner(userId) && request.resource.data.role == resource.data.role;
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
       allow delete: if isAdmin();
+
+      // Sub-collection for addresses
+      match /addresses/{addressId} {
+        allow read, write: if isOwner(userId) || isAdmin();
+      }
     }
 
-    // Carts: Private to user or session
-    match /carts/{cartId} {
-      allow read, write: if isAuthenticated() && resource.data.userId == request.auth.uid;
-      allow read, write: if isAdmin();
+    // Unique Username Reservation Registry
+    match /usernames/{username} {
+      allow read: if true; // Public read to check availability
+      allow create: if isAuthenticated() &&
+                    request.resource.data.uid == request.auth.uid &&
+                    request.resource.data.usernameNormalized == username &&
+                    !exists(/databases/$(database)/documents/usernames/$(username));
+      allow update: if false; // Usernames are immutable once reserved
+      allow delete: if isAuthenticated() && (resource.data.uid == request.auth.uid || isAdmin());
     }
 
-    // CMS & Settings: Public read, Admin write
-    match /cms_sections/{sectionId} {
-      allow read: if true;
-      allow write: if isAdmin();
+    // Products Catalog
+    match /products/{productId} {
+      allow read: if true; // Public catalog viewable by patrons
+      allow create, update, delete: if isAdmin();
     }
 
-    match /founder/{founderId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    match /settings/{settingId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Coupons: Public read active coupons, Admin write
-    match /coupons/{couponId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Reviews: Public read approved, authenticated users create pending, admin moderates
-    match /reviews/{reviewId} {
-      allow read: if resource.data.status == 'approved' || isAdmin();
-      allow create: if isAuthenticated();
+    // Orders Collection
+    match /orders/{orderId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.customerUid == request.auth.uid);
+      allow create: if true; // Patron / Guest order placement allowed
       allow update, delete: if isAdmin();
     }
 
-    // Protected Admin Role Allowlist: Client writes forbidden. Only managed via Firebase Console or Admin SDK.
-    match /admin_roles/{uid} {
-      allow read: if isAuthenticated();
-      allow write: if false;
+    // Payments Registry
+    match /payments/{paymentId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.customerUid == request.auth.uid);
+      allow create, update, delete: if isAdmin();
     }
 
     // Deny all other collections by default
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if isAdmin();
     }
   }
 }

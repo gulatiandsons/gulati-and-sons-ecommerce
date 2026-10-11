@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -32,7 +32,7 @@ export default function RealHero() {
             <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               THE HOUSE OF GULATI
             </span>
-            <span className="text-[12px] font-mono uppercase tracking-[0.2em] text-[#A58B5F] block">
+            <span className="text-[12px] font-mono uppercase tracking-[0.2em] text-[#7A5E2E] font-medium block">
               EST. IN TASTE, NOT IN YEARS
             </span>
           </div>
@@ -51,7 +51,7 @@ export default function RealHero() {
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
             <Link
               href="/collections/all"
-              className="px-8 py-4 bg-[#51292D] text-[#F3EFE6] text-xs font-sans tracking-[0.2em] uppercase text-center hover:bg-[#3C2921] transition-all shadow-md flex items-center justify-center gap-2 group"
+              className="px-8 py-4 bg-[#51292D] text-[#F3EFE6] text-xs font-sans tracking-[0.2em] uppercase text-center hover:bg-[#3C2921] transition-all shadow-md flex items-center justify-center gap-2 group min-h-[44px]"
             >
               <span>Explore the Collection</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -59,13 +59,13 @@ export default function RealHero() {
 
             <Link
               href="/the-house"
-              className="px-6 py-4 bg-transparent border border-[#252522]/40 text-[#252522] text-xs font-sans tracking-[0.2em] uppercase text-center hover:border-[#51292D] hover:text-[#51292D] transition-colors"
+              className="px-6 py-4 bg-transparent border border-[#252522]/60 text-[#252522] text-xs font-sans tracking-[0.2em] uppercase text-center hover:border-[#51292D] hover:text-[#51292D] transition-colors min-h-[44px]"
             >
               Discover Our Story
             </Link>
           </div>
 
-          <div className="pt-6 border-t border-[#CCC5B9]/60 flex items-center gap-6 text-xs font-mono text-[#252522]/60">
+          <div className="pt-6 border-t border-[#CCC5B9]/60 flex items-center gap-6 text-xs font-mono text-[#252522]/80">
             <span>THE COLLECTION / 01</span>
             <span>·</span>
             <span>CURATED HOUSE PIECES</span>
@@ -89,7 +89,7 @@ export default function RealHero() {
               src="https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=1600&q=85"
               alt="The Collector's Table: Curated perfume flacon, timepiece, and grooming essential"
               fill
-              priority
+              loading="lazy"
               className="object-cover scale-105 transition-transform duration-700"
               sizes="(max-width: 1024px) 100vw, 700px"
             />

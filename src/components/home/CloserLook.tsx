@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -63,11 +63,11 @@ export default function CloserLook() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#252522]/80 via-transparent to-transparent pointer-events-none" />
 
               <div className="absolute bottom-4 left-4 right-4 text-[#F3EFE6]">
-                <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                <span className="text-[12px] font-mono uppercase tracking-widest text-[#C8AD7F]">
                   DETAIL 02
                 </span>
-                <h4 className="font-serif text-lg font-medium mt-0.5">The Horological Bezel</h4>
-                <p className="text-xs text-[#E2D9C8]/80 font-sans">
+                <h3 className="font-serif text-lg font-medium mt-0.5">The Horological Bezel</h3>
+                <p className="text-xs text-[#E2D9C8]/90 font-sans">
                   Diamond-polished Cerachrom ceramic numerals coated with micro-layers of gold.
                 </p>
               </div>
@@ -85,11 +85,11 @@ export default function CloserLook() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#252522]/80 via-transparent to-transparent pointer-events-none" />
 
               <div className="absolute bottom-4 left-4 right-4 text-[#F3EFE6]">
-                <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                <span className="text-[12px] font-mono uppercase tracking-widest text-[#C8AD7F]">
                   DETAIL 03
                 </span>
-                <h4 className="font-serif text-lg font-medium mt-0.5">Supple Nappa Grain</h4>
-                <p className="text-xs text-[#E2D9C8]/80 font-sans">
+                <h3 className="font-serif text-lg font-medium mt-0.5">Supple Nappa Grain</h3>
+                <p className="text-xs text-[#E2D9C8]/90 font-sans">
                   Uncorrected natural leather that breathes, softens, and patinas with personal wear.
                 </p>
               </div>

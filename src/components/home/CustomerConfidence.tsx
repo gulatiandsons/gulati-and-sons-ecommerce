@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { CheckCircle2, Star } from 'lucide-react';
@@ -24,7 +24,7 @@ export default function CustomerConfidence() {
     >
       <div className="space-y-3.5">
         {/* 5 Stars */}
-        <div className="flex text-[#A58B5F] gap-1">
+        <div className="flex text-[#7A5E2E] gap-1">
           {[...Array(rev.rating)].map((_, i) => (
             <Star key={i} className="w-3.5 h-3.5 fill-current" />
           ))}
@@ -46,10 +46,10 @@ export default function CustomerConfidence() {
             </span>
           )}
         </div>
-        <p className="text-[13px] font-mono text-[#252522]/65 truncate">
+        <p className="text-[13px] font-mono text-[#252522]/80 truncate">
           Acquired: {rev.productName}
         </p>
-        <span className="text-[12px] font-mono text-[#252522]/40 block">{rev.date}</span>
+        <span className="text-[12px] font-mono text-[#252522]/70 block">{rev.date}</span>
       </div>
     </div>
   );
@@ -72,7 +72,7 @@ export default function CustomerConfidence() {
               Words From Those Who Know Us.
             </h2>
           </div>
-          <p className="text-xs font-mono text-[#252522]/60 uppercase tracking-wider self-start sm:self-auto">
+          <p className="text-xs font-mono text-[#252522]/80 uppercase tracking-wider self-start sm:self-auto">
             Twenty Verified Reflections · Hover to Pause
           </p>
         </div>

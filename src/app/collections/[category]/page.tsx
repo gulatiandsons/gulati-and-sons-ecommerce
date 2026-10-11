@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
@@ -7,6 +7,7 @@ import { SlidersHorizontal, ArrowUpDown, ChevronRight, X } from 'lucide-react';
 import { useCommerce } from '@/lib/store/commerceStore';
 import { CATEGORIES } from '@/lib/data/categories';
 import ProductCard from '@/components/product/ProductCard';
+import { BreadcrumbJsonLd } from '@/components/seo/JsonLd';
 
 export default function CollectionPage() {
   const params = useParams();
@@ -73,6 +74,14 @@ export default function CollectionPage() {
 
   return (
     <div className="w-full pt-28 pb-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto space-y-12">
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', url: 'https://gulatiandsons.com' },
+          { name: 'Collections', url: 'https://gulatiandsons.com/collections/all' },
+          { name: isAll ? 'All Pieces' : currentCategory?.name || categorySlug, url: `https://gulatiandsons.com/collections/${categorySlug}` }
+        ]}
+      />
+
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumbs" className="flex items-center gap-2 text-xs font-mono text-[#252522]/60 uppercase tracking-widest">
         <Link href="/" className="hover:text-[#51292D]">Home</Link>
@@ -84,7 +93,7 @@ export default function CollectionPage() {
 
       {/* Editorial Header */}
       <div className="space-y-4 max-w-3xl border-b border-[#CCC5B9]/60 pb-8">
-        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#7A5E2E] font-medium block">
           {categorySubheading}
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#252522] font-normal leading-tight">
@@ -146,6 +155,7 @@ export default function CollectionPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
+              aria-label="Sort collection by"
               className="bg-transparent border-none text-xs font-sans text-[#252522] focus:outline-none cursor-pointer"
             >
               <option value="featured">Sort: Featured</option>
@@ -181,6 +191,7 @@ export default function CollectionPage() {
       )}
 
       {/* Product Results Grid */}
+      <h2 className="sr-only">Collection Specimens</h2>
       {filteredProducts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
           {filteredProducts.map((p) => (

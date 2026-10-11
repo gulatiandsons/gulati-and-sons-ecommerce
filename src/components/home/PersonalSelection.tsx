@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -82,8 +82,8 @@ export default function PersonalSelection() {
                         }}
                         className="p-5 text-left bg-[#E2D9C8]/40 border border-[#CCC5B9] hover:border-[#51292D] hover:bg-[#E2D9C8] transition-all group"
                       >
-                        <h4 className="font-serif text-lg text-[#252522] group-hover:text-[#51292D]">{opt.label}</h4>
-                        <p className="text-xs text-[#252522]/60 mt-1 font-sans">{opt.desc}</p>
+                        <span className="block font-serif text-lg text-[#252522] group-hover:text-[#51292D]">{opt.label}</span>
+                        <span className="block text-xs text-[#252522]/80 mt-1 font-sans">{opt.desc}</span>
                       </button>
                     ))}
                   </div>
@@ -108,8 +108,8 @@ export default function PersonalSelection() {
                         }}
                         className="p-5 text-left bg-[#E2D9C8]/40 border border-[#CCC5B9] hover:border-[#51292D] hover:bg-[#E2D9C8] transition-all group"
                       >
-                        <h4 className="font-serif text-lg text-[#252522] group-hover:text-[#51292D]">{opt.label}</h4>
-                        <p className="text-xs text-[#252522]/60 mt-1 font-sans">{opt.desc}</p>
+                        <span className="block font-serif text-lg text-[#252522] group-hover:text-[#51292D]">{opt.label}</span>
+                        <span className="block text-xs text-[#252522]/80 mt-1 font-sans">{opt.desc}</span>
                       </button>
                     ))}
                   </div>
@@ -134,8 +134,8 @@ export default function PersonalSelection() {
                         }}
                         className="p-5 text-left bg-[#E2D9C8]/40 border border-[#CCC5B9] hover:border-[#51292D] hover:bg-[#E2D9C8] transition-all group"
                       >
-                        <h4 className="font-serif text-lg text-[#252522] group-hover:text-[#51292D]">{opt.label}</h4>
-                        <p className="text-xs text-[#252522]/60 mt-1 font-sans">{opt.desc}</p>
+                        <span className="block font-serif text-lg text-[#252522] group-hover:text-[#51292D]">{opt.label}</span>
+                        <span className="block text-xs text-[#252522]/80 mt-1 font-sans">{opt.desc}</span>
                       </button>
                     ))}
                   </div>
