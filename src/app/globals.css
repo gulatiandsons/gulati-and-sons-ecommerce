@@ -72,6 +72,44 @@ body {
   outline-offset: 2px;
 }
 
+/* Seamless Continuous Marquee Animations */
+@keyframes marquee-ltr {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes marquee-rtl {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-left-to-right {
+  display: flex;
+  width: max-content;
+  animation: marquee-ltr 50s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-right-to-left {
+  display: flex;
+  width: max-content;
+  animation: marquee-rtl 50s linear infinite;
+  will-change: transform;
+}
+
+.marquee-container:hover .animate-marquee-left-to-right,
+.marquee-container:hover .animate-marquee-right-to-left {
+  animation-play-state: paused;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, ::before, ::after {
     animation-duration: 0.01ms !important;
@@ -80,3 +118,4 @@ body {
     scroll-behavior: auto !important;
   }
 }
+

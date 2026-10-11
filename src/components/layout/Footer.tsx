@@ -8,8 +8,8 @@ export default function Footer() {
   return (
     <footer className="relative bg-[#3C2921] text-[#E2D9C8] overflow-hidden pt-12 pb-16 border-t border-[#A58B5F]/30">
       {/* Monumental architectural typography immediately before/blending into footer */}
-      <div className="w-full overflow-hidden select-none pointer-events-none pb-8 sm:pb-12 text-center opacity-15">
-        <h2 className="font-serif text-5xl sm:text-7xl md:text-8xl lg:text-[11rem] xl:text-[13rem] font-medium tracking-[0.18em] uppercase text-[#F3EFE6] leading-none whitespace-nowrap transition-transform duration-1000">
+      <div className="w-full overflow-hidden select-none pointer-events-none pb-6 sm:pb-10 text-center opacity-15 px-4">
+        <h2 className="font-serif text-[5.6vw] font-medium tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.15em] uppercase text-[#F3EFE6] leading-none whitespace-nowrap mx-auto">
           GULATI AND SONS
         </h2>
       </div>
@@ -17,17 +17,19 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 relative z-10">
         {/* Brand Header inside Footer */}
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between pb-12 border-b border-[#A58B5F]/20 gap-8">
-          <div className="space-y-3">
-            <div className="relative h-14 w-52 sm:h-16 sm:w-64">
+          <div className="space-y-4">
+            {/* Big, radiant House Crest & Lettering Logo */}
+            <div className="relative h-28 w-36 sm:h-36 sm:w-48 md:h-44 md:w-56 transition-transform duration-300 hover:scale-[1.02]">
               <Image
                 src="/logo-footer.png"
                 alt="Gulati & Sons - The Private House"
                 fill
-                className="object-contain brightness-0 invert"
-                sizes="(max-width: 640px) 208px, 256px"
+                priority
+                className="object-contain object-left drop-shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
+                sizes="(max-width: 640px) 144px, (max-width: 768px) 192px, 224px"
               />
             </div>
-            <p className="text-xs font-serif text-[#E2D9C8]/80 max-w-sm tracking-wide">
+            <p className="text-xs font-serif text-[#E2D9C8]/80 max-w-sm tracking-wide leading-relaxed">
               The Private House. Curated fragrances, horological masterpieces, and everyday essentials selected with intention.
             </p>
           </div>

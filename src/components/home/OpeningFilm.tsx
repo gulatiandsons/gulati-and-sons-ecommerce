@@ -20,6 +20,53 @@ export default function OpeningFilm() {
     return () => motionQuery.removeEventListener('change', handleMotionChange);
   }, []);
 
+  // Ensure robust automatic video playback and continuous looping
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid) return;
+
+    vid.defaultMuted = true;
+    vid.muted = true;
+    vid.playsInline = true;
+    vid.loop = true;
+
+    const startPlayback = () => {
+      if (!vid) return;
+      vid.defaultMuted = true;
+      vid.muted = true;
+      const playPromise = vid.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            setVideoLoaded(true);
+          })
+          .catch((err) => {
+            console.warn('Autoplay requires gesture or waiting for buffer:', err);
+            // In case browser policy temporarily deferred, trigger on first document interaction
+            const resumeOnInteraction = () => {
+              if (vid) {
+                vid.defaultMuted = true;
+                vid.muted = true;
+                vid.play().then(() => {
+                  setIsPlaying(true);
+                  setVideoLoaded(true);
+                }).catch(() => {});
+              }
+              window.removeEventListener('click', resumeOnInteraction);
+              window.removeEventListener('touchstart', resumeOnInteraction);
+              window.removeEventListener('scroll', resumeOnInteraction);
+            };
+            window.addEventListener('click', resumeOnInteraction, { once: true });
+            window.addEventListener('touchstart', resumeOnInteraction, { once: true });
+            window.addEventListener('scroll', resumeOnInteraction, { once: true });
+          });
+      }
+    };
+
+    startPlayback();
+  }, [prefersReducedMotion]);
+
   useEffect(() => {
     if (prefersReducedMotion && videoRef.current) {
       videoRef.current.pause();
@@ -33,6 +80,8 @@ export default function OpeningFilm() {
       videoRef.current.pause();
       setIsPlaying(false);
     } else {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
       videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
     }
   };
@@ -57,10 +106,14 @@ export default function OpeningFilm() {
           muted
           loop
           playsInline
+          preload="auto"
           onLoadedData={() => setVideoLoaded(true)}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-            videoLoaded ? 'opacity-85' : 'opacity-0'
-          }`}
+          onCanPlay={() => setVideoLoaded(true)}
+          onPlay={() => {
+            setIsPlaying(true);
+            setVideoLoaded(true);
+          }}
+          className="absolute inset-0 w-full h-full object-cover opacity-90 transition-opacity duration-700"
           aria-hidden="true"
         >
           <source src="/video-loop.mp4" type="video/mp4" />
@@ -69,7 +122,7 @@ export default function OpeningFilm() {
 
       {/* Static Fallback Poster (Visible when video loading or reduced motion active) */}
       <div
-        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 -z-10 ${
           videoLoaded && !prefersReducedMotion ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
         style={{

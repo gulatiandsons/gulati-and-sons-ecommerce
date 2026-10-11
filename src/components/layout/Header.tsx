@@ -16,6 +16,11 @@ export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isHomepage = pathname === '/';
 
@@ -71,16 +76,16 @@ export default function Header() {
         {/* Center: Brand Wordmark / Emblem Logo */}
         <div className="flex justify-center items-center lg:w-2/4">
           <Link href="/" className="relative flex items-center justify-center group" aria-label="Gulati & Sons Home">
-            <div className="relative h-12 w-48 sm:h-14 sm:w-56 transition-transform duration-300 group-hover:scale-[1.02]">
+            <div className="relative h-14 w-28 sm:h-16 sm:w-32 transition-transform duration-300 group-hover:scale-[1.02]">
               <Image
                 src="/logo-nav.png"
                 alt="Gulati & Sons - The Private House"
                 fill
                 priority
                 className={`object-contain transition-all duration-300 ${
-                  isTransparent ? 'brightness-0 invert drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]' : ''
+                  isTransparent ? 'brightness-125 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]' : ''
                 }`}
-                sizes="(max-width: 640px) 192px, 224px"
+                sizes="(max-width: 640px) 112px, 128px"
               />
             </div>
           </Link>
@@ -105,7 +110,7 @@ export default function Header() {
             aria-label="Saved Items"
           >
             <Heart className="w-5 h-5" />
-            {wishlist.length > 0 && (
+            {mounted && wishlist.length > 0 && (
               <span className="absolute top-1 right-1 w-2 h-2 bg-[#51292D] rounded-full" />
             )}
           </Link>
@@ -114,13 +119,15 @@ export default function Header() {
           <Link
             href="/account"
             className="p-2 text-current hover:text-[#51292D] transition-colors hidden sm:block"
-            aria-label={currentUser ? `Account: ${currentUser.name}` : 'Sign In'}
+            aria-label="Patron Account"
+            title={mounted && currentUser ? `Account: ${currentUser.name}` : 'Patron Account'}
+            suppressHydrationWarning
           >
             <User className="w-5 h-5" />
           </Link>
 
           {/* Admin shortcut badge if logged in */}
-          {isAdmin && (
+          {mounted && isAdmin && (
             <Link
               href="/admin"
               className="text-[10px] uppercase font-mono px-2 py-0.5 bg-[#51292D] text-[#F3EFE6] tracking-wider rounded-sm hidden sm:inline-block"
@@ -133,10 +140,10 @@ export default function Header() {
           <button
             onClick={() => setIsCartOpen(true)}
             className="p-2 text-current hover:text-[#51292D] transition-colors flex items-center gap-1.5 relative"
-            aria-label={`Shopping bag containing ${totalCartCount} items`}
+            aria-label="Shopping bag"
           >
             <ShoppingBag className="w-5 h-5" />
-            <span className="text-xs font-mono font-medium">{totalCartCount}</span>
+            <span className="text-xs font-mono font-medium">{mounted ? totalCartCount : 0}</span>
           </button>
         </div>
       </div>
