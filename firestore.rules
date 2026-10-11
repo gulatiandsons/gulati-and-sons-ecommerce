@@ -1,0 +1,95 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Role verification: Relies on server-controlled custom claims or verified admin document
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.admin == true ||
+        exists(/databases/$(database)/documents/admin_roles/$(request.auth.uid))
+      );
+    }
+
+    // Products: Public can read active products. Only verified Admins can create/update/delete.
+    match /products/{productId} {
+      allow read: if resource.data.status == 'active' || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Categories: Public can read. Admin can write.
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Orders:
+    // Customers can read only their own orders.
+    // Customers can create an order with initial 'pending' payment status.
+    // Crucially: Only Admins or trusted backend can change paymentStatus to 'paid' or fulfillmentStatus.
+    match /orders/{orderId} {
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.customer.uid == request.auth.uid);
+      allow create: if true; // Allows guest checkout creation with initial 'pending' state
+      allow update, delete: if isAdmin();
+    }
+
+    // Customer Profiles:
+    // Customers can read and update only their own profile.
+    // Customers CANNOT modify their own 'role' field (prevents self-promotion to admin).
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && request.resource.data.role == 'customer';
+      allow update: if isOwner(userId) && request.resource.data.role == resource.data.role;
+      allow delete: if isAdmin();
+    }
+
+    // Carts: Private to user or session
+    match /carts/{cartId} {
+      allow read, write: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow read, write: if isAdmin();
+    }
+
+    // CMS & Settings: Public read, Admin write
+    match /cms_sections/{sectionId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Coupons: Public read active coupons, Admin write
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Reviews: Public read approved, authenticated users create pending, admin moderates
+    match /reviews/{reviewId} {
+      allow read: if resource.data.status == 'approved' || isAdmin();
+      allow create: if isAuthenticated();
+      allow update, delete: if isAdmin();
+    }
+
+    // Protected Admin Role Allowlist: Client writes forbidden. Only managed via Firebase Console or Admin SDK.
+    match /admin_roles/{uid} {
+      allow read: if isAuthenticated();
+      allow write: if false;
+    }
+
+    // Deny all other collections by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

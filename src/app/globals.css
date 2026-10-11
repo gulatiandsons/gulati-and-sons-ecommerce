@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ivory: #F3EFE6;
+  --oxblood: #51292D;
+  --walnut: #3C2921;
+  --ink: #252522;
+  --antique-brass: #A58B5F;
+  --parchment: #E2D9C8;
+  --forest-green: #34483D;
+  --midnight-navy: #232E3A;
+  --soft-stone: #CCC5B9;
+
+  --background: var(--ivory);
+  --foreground: var(--ink);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@theme {
+  --color-ivory: #F3EFE6;
+  --color-oxblood: #51292D;
+  --color-walnut: #3C2921;
+  --color-ink: #252522;
+  --color-brass: #A58B5F;
+  --color-parchment: #E2D9C8;
+  --color-forest: #34483D;
+  --color-navy: #232E3A;
+  --color-stone: #CCC5B9;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-editorial: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-title: var(--font-baskerville), "Libre Baskerville", Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-mono-plex), "IBM Plex Mono", monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--ivory);
+  color: var(--ink);
+  font-family: var(--font-inter), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Custom Heritage Styling & Transitions */
+::selection {
+  background-color: #51292D;
+  color: #F3EFE6;
+}
+
+/* Custom scrollbar for luxury feel */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #E2D9C8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #A58B5F;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #51292D;
+}
+
+/* Accessibility focus outline */
+:focus-visible {
+  outline: 2px solid #51292D;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
