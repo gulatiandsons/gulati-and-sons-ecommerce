@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -71,7 +71,7 @@ export default function CartPage() {
   return (
     <div className="w-full pt-28 pb-28 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto space-y-12">
       <div>
-        <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
           YOUR SELECTION
         </span>
         <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#252522] font-normal mt-1">
@@ -90,7 +90,7 @@ export default function CartPage() {
 
               <div className="flex-1 flex flex-col justify-between">
                 <div>
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                  <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
                     {item.category}
                   </span>
                   <h3 className="font-serif text-lg text-[#252522] leading-snug">
@@ -169,7 +169,7 @@ export default function CartPage() {
 
           {/* Coupon Entry */}
           <form onSubmit={handleApplyCoupon} className="space-y-2 pt-2 border-t border-[#CCC5B9]/60">
-            <label className="block text-[11px] uppercase tracking-wider font-mono text-[#252522]/70">
+            <label className="block text-[13px] uppercase tracking-wider font-mono text-[#252522]/70">
               Promotional Voucher or Privilege Code:
             </label>
             <div className="flex gap-2">
@@ -205,7 +205,7 @@ export default function CartPage() {
               <ArrowRight className="w-4 h-4" />
             </Link>
 
-            <p className="text-[11px] text-[#252522]/60 font-sans text-center leading-relaxed">
+            <p className="text-[13px] text-[#252522]/60 font-sans text-center leading-relaxed">
               Dispatched with tamper-proof security seals in signature packaging.
             </p>
           </div>

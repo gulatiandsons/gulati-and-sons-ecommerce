@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -31,7 +31,7 @@ export default function AccountPage() {
       {/* Account Header */}
       <div className="border-b border-[#CCC5B9]/80 pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+          <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
             PATRON CONCIERGE
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#252522] font-normal mt-1">
@@ -125,17 +125,17 @@ export default function AccountPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9]">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Lifetime Orders</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Lifetime Orders</span>
                   <span className="font-serif text-3xl text-[#51292D] mt-1 block">{orders.length}</span>
                 </div>
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9]">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Lifetime Valuation</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Lifetime Valuation</span>
                   <span className="font-serif text-3xl text-[#51292D] mt-1 block">
                     ₹{orders.reduce((a, b) => a + b.total, 0).toLocaleString('en-IN')}
                   </span>
                 </div>
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9]">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Delivery Tier</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Delivery Tier</span>
                   <span className="font-serif text-xl text-[#34483D] mt-2 block flex items-center gap-1.5">
                     <Shield className="w-4 h-4 text-[#34483D]" /> Priority White-Glove
                   </span>
@@ -147,7 +147,7 @@ export default function AccountPage() {
                 <div className="p-6 bg-[#E2D9C8]/50 border border-[#A58B5F]/40 space-y-4">
                   <div className="flex justify-between items-center">
                     <div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D]">
+                      <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D]">
                         Most Recent Acquisition
                       </span>
                       <h4 className="font-serif text-xl text-[#252522] mt-0.5">Order #{orders[0].orderNumber}</h4>
@@ -199,7 +199,7 @@ export default function AccountPage() {
                       <span className="font-serif text-base text-[#51292D]">
                         ₹{ord.total.toLocaleString('en-IN')}
                       </span>
-                      <span className="text-[10px] font-mono uppercase px-2.5 py-1 bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/30">
+                      <span className="text-[12px] font-mono uppercase px-2.5 py-1 bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/30">
                         {ord.fulfillmentStatus}
                       </span>
                     </div>
@@ -230,7 +230,7 @@ export default function AccountPage() {
                         <div key={idx} className="relative space-y-0.5">
                           <span className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-[#51292D] ring-4 ring-[#F3EFE6]" />
                           <p className="font-serif text-base text-[#252522] font-medium">{event.title}</p>
-                          <p className="text-[11px] font-mono text-[#252522]/60">{event.timestamp}</p>
+                          <p className="text-[13px] font-mono text-[#252522]/60">{event.timestamp}</p>
                           {event.note && (
                             <p className="text-xs text-[#252522]/80 italic font-sans">{event.note}</p>
                           )}
@@ -257,7 +257,7 @@ export default function AccountPage() {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#A58B5F]/40 space-y-2">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D] font-semibold">
+                  <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D] font-semibold">
                     Primary Residence (Default)
                   </span>
                   <p className="font-serif text-lg text-[#252522]">{currentUser?.name || 'Yashveer Singh'}</p>

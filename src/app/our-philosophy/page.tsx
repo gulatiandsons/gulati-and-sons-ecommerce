@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Link from 'next/link';
 import { ArrowRight, Check } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -40,7 +40,7 @@ export default function OurPhilosophyPage() {
   return (
     <div className="w-full pt-28 pb-32 px-6 sm:px-10 lg:px-16 max-w-5xl mx-auto space-y-16">
       <div className="text-center space-y-4 max-w-2xl mx-auto border-b border-[#CCC5B9]/80 pb-12">
-        <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.3em] text-[#51292D] block">
           THE HOUSE DOCTRINE
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#252522] font-normal leading-tight">

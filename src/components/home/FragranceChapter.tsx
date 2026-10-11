@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -77,12 +77,12 @@ export default function FragranceChapter() {
               </div>
 
               {/* Liquid glass 3D cue badge */}
-              <div className="absolute top-4 left-4 bg-[#252522]/80 backdrop-blur-md text-[#F3EFE6] px-3 py-1.5 text-[10px] font-mono uppercase tracking-widest flex items-center gap-2 border border-[#A58B5F]/40">
+              <div className="absolute top-4 left-4 bg-[#252522]/80 backdrop-blur-md text-[#F3EFE6] px-3 py-1.5 text-[12px] font-mono uppercase tracking-widest flex items-center gap-2 border border-[#A58B5F]/40">
                 <RotateCw className="w-3 h-3 text-[#A58B5F]" />
                 <span>Drag to Inspect Flacon</span>
               </div>
 
-              <div className="absolute bottom-4 right-4 bg-[#F3EFE6]/90 backdrop-blur-md px-3 py-1 text-[11px] font-mono text-[#51292D]">
+              <div className="absolute bottom-4 right-4 bg-[#F3EFE6]/90 backdrop-blur-md px-3 py-1 text-[13px] font-mono text-[#51292D]">
                 50 ML · EAU DE PARFUM
               </div>
             </div>
@@ -90,7 +90,7 @@ export default function FragranceChapter() {
 
           {/* Right: 45% Editorial Chapter Content */}
           <div className="lg:col-span-5 space-y-6">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               CHAPTER I. FRAGRANCE
             </span>
 
@@ -121,7 +121,7 @@ export default function FragranceChapter() {
         <div className="bg-[#E2D9C8]/50 border border-[#CCC5B9] p-8 sm:p-10">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 border-b border-[#CCC5B9]/60 pb-6">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] flex items-center gap-1.5">
+              <span className="text-[12px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] flex items-center gap-1.5">
                 <Sparkles className="w-3 h-3" /> The Scent Library
               </span>
               <h3 className="font-serif text-2xl text-[#252522] mt-1">Explore by Fragrance Character</h3>
@@ -142,7 +142,7 @@ export default function FragranceChapter() {
                 }`}
               >
                 <span className="block font-serif text-base">{profile.label}</span>
-                <span className={`text-[10px] font-mono uppercase tracking-wider block mt-1 ${
+                <span className={`text-[12px] font-mono uppercase tracking-wider block mt-1 ${
                   selectedProfile.id === profile.id ? 'text-[#A58B5F]' : 'text-[#252522]/50'
                 }`}>
                   Aromatic Accord
@@ -154,7 +154,7 @@ export default function FragranceChapter() {
           {/* Dynamic suggestion panel */}
           <div className="bg-[#F3EFE6] border border-[#CCC5B9] p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
             <div className="space-y-1">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D]">
+              <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D]">
                 Distinguishing Note: {selectedProfile.recommendedNote}
               </span>
               <p className="font-sans text-xs sm:text-sm text-[#252522]/80 max-w-xl">

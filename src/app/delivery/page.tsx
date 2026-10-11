@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Link from 'next/link';
 import { Truck, MapPin, ChevronRight, ShieldCheck } from 'lucide-react';
 import { PAN_INDIA_REGIONS } from '@/lib/data/deliveryStates';
@@ -21,7 +21,7 @@ export default function DeliveryDirectoryPage() {
     <div className="w-full pt-28 pb-32 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto space-y-16">
       {/* Header */}
       <div className="max-w-3xl space-y-4 border-b border-[#CCC5B9]/80 pb-8">
-        <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
           DOMESTIC REACH · 36 REGIONS
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#252522] font-normal">
@@ -54,7 +54,7 @@ export default function DeliveryDirectoryPage() {
                 </h3>
                 <ChevronRight className="w-4 h-4 text-[#A58B5F] group-hover:translate-x-0.5 transition-transform" />
               </div>
-              <p className="text-[11px] font-mono text-[#252522]/60 mt-1">
+              <p className="text-[13px] font-mono text-[#252522]/60 mt-1">
                 Transit: {st.estimatedDays}
               </p>
             </Link>
@@ -84,7 +84,7 @@ export default function DeliveryDirectoryPage() {
                 </h3>
                 <ChevronRight className="w-4 h-4 text-[#A58B5F] group-hover:translate-x-0.5 transition-transform" />
               </div>
-              <p className="text-[11px] font-mono text-[#252522]/60 mt-1">
+              <p className="text-[13px] font-mono text-[#252522]/60 mt-1">
                 Transit: {ut.estimatedDays}
               </p>
             </Link>
@@ -95,7 +95,7 @@ export default function DeliveryDirectoryPage() {
       {/* Logistics Standard Note */}
       <div className="p-6 bg-[#34483D] text-[#F3EFE6] flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="space-y-1">
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F] flex items-center gap-1.5 font-semibold">
+          <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F] flex items-center gap-1.5 font-semibold">
             <ShieldCheck className="w-4 h-4" /> Transit Security Policy
           </span>
           <p className="text-xs sm:text-sm text-[#E2D9C8]/90 font-sans max-w-2xl leading-relaxed">

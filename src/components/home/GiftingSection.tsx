@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -26,7 +26,7 @@ export default function GiftingSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#252522]/40 via-transparent to-transparent pointer-events-none" />
 
               <div className="absolute bottom-6 left-6 bg-[#F3EFE6]/95 backdrop-blur-md px-4 py-2 border border-[#A58B5F]/40">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D] flex items-center gap-1.5 font-medium">
+                <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D] flex items-center gap-1.5 font-medium">
                   <Gift className="w-3.5 h-3.5 text-[#51292D]" /> Complimentary Presentation Casing
                 </span>
               </div>
@@ -35,7 +35,7 @@ export default function GiftingSection() {
 
           {/* Right Column (45%): Editorial & Services */}
           <div className="lg:col-span-5 space-y-6">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               BESPOKE SERVICES
             </span>
 

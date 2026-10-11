@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
           <div className="w-12 h-12 rounded-full bg-[#51292D] border border-[#A58B5F]/50 flex items-center justify-center mx-auto text-[#F3EFE6]">
             <Lock className="w-5 h-5 text-[#A58B5F]" />
           </div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
+          <span className="text-[12px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
             AUTHORIZATION CLEARANCE
           </span>
           <h1 className="font-serif text-2xl sm:text-3xl font-medium tracking-wide">
@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
 
         <form onSubmit={handleAdminSignIn} className="space-y-4">
           <div>
-            <label className="block text-[11px] font-mono uppercase text-[#E2D9C8]/80 mb-1">
+            <label className="block text-[13px] font-mono uppercase text-[#E2D9C8]/80 mb-1">
               Admin Identity / Email
             </label>
             <input
@@ -91,7 +91,7 @@ export default function AdminLoginPage() {
           </div>
 
           <div>
-            <label className="block text-[11px] font-mono uppercase text-[#E2D9C8]/80 mb-1">
+            <label className="block text-[13px] font-mono uppercase text-[#E2D9C8]/80 mb-1">
               Administrative Passkey
             </label>
             <input
@@ -123,7 +123,7 @@ export default function AdminLoginPage() {
             <span>Instant Demo Super Admin Access</span>
           </button>
 
-          <p className="text-[10px] text-[#E2D9C8]/50 font-mono">
+          <p className="text-[12px] text-[#E2D9C8]/50 font-mono">
             Firebase Google Auth & Custom Admin Role claims enforced.
           </p>
         </div>

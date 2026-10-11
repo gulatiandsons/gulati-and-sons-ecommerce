@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -28,7 +28,7 @@ export default function PrivateCorrespondence() {
       className="w-full bg-[#E2D9C8] text-[#252522] py-24 lg:py-32 px-6 sm:px-10 lg:px-16 border-b border-[#CCC5B9]"
     >
       <div className="max-w-3xl mx-auto text-center space-y-8">
-        <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.3em] text-[#51292D] block">
           PRIVATE CORRESPONDENCE
         </span>
 
@@ -84,7 +84,7 @@ export default function PrivateCorrespondence() {
               </p>
             )}
 
-            <p className="text-[11px] text-[#252522]/60 font-sans">
+            <p className="text-[13px] text-[#252522]/60 font-sans">
               By submitting, you agree to our{' '}
               <Link href="/privacy" className="underline hover:text-[#51292D]">
                 Privacy Terms

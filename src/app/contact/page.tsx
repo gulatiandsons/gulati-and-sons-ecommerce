@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, CheckCircle2, Clock, MessageSquare } from 'lucide-react';
@@ -20,7 +20,7 @@ export default function ContactPage() {
   return (
     <div className="w-full pt-28 pb-32 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto space-y-16">
       <div className="max-w-3xl space-y-4 border-b border-[#CCC5B9]/80 pb-8">
-        <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
           CONCIERGE ASSISTANCE
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#252522] font-normal">
@@ -35,7 +35,7 @@ export default function ContactPage() {
         {/* Contact Info (5 cols) */}
         <div className="lg:col-span-5 space-y-8 bg-[#E2D9C8]/40 border border-[#CCC5B9] p-8">
           <div className="space-y-2">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D]">
+            <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D]">
               Direct Inquiries
             </span>
             <h3 className="font-serif text-2xl text-[#252522]">The Concierge Desk</h3>

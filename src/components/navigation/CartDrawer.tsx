@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useEffect } from 'react';
 import Image from 'next/image';
@@ -165,7 +165,7 @@ export default function CartDrawer() {
                 ₹{subtotal.toLocaleString('en-IN')}
               </span>
             </div>
-            <p className="text-[11px] text-[#252522]/60 font-sans leading-relaxed">
+            <p className="text-[13px] text-[#252522]/60 font-sans leading-relaxed">
               Taxes included. Delivery charges and applicable coupons verified at checkout.
             </p>
 

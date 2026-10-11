@@ -129,7 +129,7 @@ export default function ProductDetailPage() {
               sizes="(max-width: 1024px) 100vw, 700px"
             />
             {product.isDemonstration && (
-              <div className="absolute top-4 left-4 bg-[#3C2921]/90 text-[#F3EFE6] px-3 py-1 text-[10px] font-mono uppercase tracking-widest">
+              <div className="absolute top-4 left-4 bg-[#3C2921]/90 text-[#F3EFE6] px-3 py-1 text-[12px] font-mono uppercase tracking-widest">
                 Prototype Demonstration
               </div>
             )}
@@ -159,7 +159,7 @@ export default function ProductDetailPage() {
         {/* Right: Purchase Information Column (40% ~ 5 cols) */}
         <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-28">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
               {product.brand} · {product.categoryLabel}
             </span>
             <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] leading-tight font-normal mt-1">
@@ -195,7 +195,7 @@ export default function ProductDetailPage() {
                 <span className="text-xs line-through text-[#252522]/50 font-mono">
                   MRP ₹{product.mrp.toLocaleString('en-IN')}
                 </span>
-                <span className="text-[11px] font-mono text-[#34483D] bg-[#34483D]/10 px-2 py-0.5">
+                <span className="text-[13px] font-mono text-[#34483D] bg-[#34483D]/10 px-2 py-0.5">
                   Save {product.discountPercent}%
                 </span>
               </div>
@@ -426,7 +426,7 @@ export default function ProductDetailPage() {
                       <div key={rev.id} className="p-3 bg-[#E2D9C8]/40 border border-[#CCC5B9]/60 space-y-1">
                         <div className="flex justify-between items-center">
                           <span className="font-semibold text-xs text-[#252522]">{rev.authorName}</span>
-                          <span className="text-[10px] font-mono text-[#252522]/50">{rev.date}</span>
+                          <span className="text-[12px] font-mono text-[#252522]/50">{rev.date}</span>
                         </div>
                         <p className="text-xs text-[#252522]/80 italic">&ldquo;{rev.comment}&rdquo;</p>
                       </div>
@@ -492,6 +492,25 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Sticky Mobile Add-To-Bag Action Bar (Baymard Mobile Best Practice) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#F3EFE6]/95 backdrop-blur-md border-t border-[#CCC5B9] px-4 py-3 shadow-[0_-4px_16px_rgba(37,37,34,0.08)] flex items-center justify-between gap-3 safe-bottom">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-serif font-semibold text-[#252522] truncate">{product.name}</p>
+          <p className="text-xs font-mono font-bold text-[#51292D]">₹{price.toLocaleString('en-IN')}</p>
+        </div>
+        <button
+          onClick={handleAdd}
+          disabled={product.stock <= 0}
+          className={`px-5 py-2.5 text-xs font-sans uppercase tracking-wider font-medium shrink-0 min-h-[44px] transition-colors shadow-sm ${
+            isAddedFeedback
+              ? 'bg-[#34483D] text-[#F3EFE6]'
+              : 'bg-[#51292D] text-[#F3EFE6] active:bg-[#3C2921]'
+          } disabled:opacity-50`}
+        >
+          {isAddedFeedback ? 'Added' : 'Add to Bag'}
+        </button>
       </div>
     </div>
   );

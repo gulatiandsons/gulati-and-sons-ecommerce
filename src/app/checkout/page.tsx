@@ -13,7 +13,10 @@ import {
   AlertCircle,
   Truck,
   CreditCard,
-  QrCode
+  QrCode,
+  ChevronDown,
+  ChevronUp,
+  ShoppingBag
 } from 'lucide-react';
 import { useCommerce } from '@/lib/store/commerceStore';
 import { useAuth } from '@/lib/store/authStore';
@@ -47,6 +50,7 @@ export default function CheckoutPage() {
   // Voucher
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
+  const [showMobileSummary, setShowMobileSummary] = useState(false);
 
   const subtotal = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const freeThreshold = settings.freeShippingThreshold || 5000;
@@ -193,7 +197,7 @@ export default function CheckoutPage() {
       {/* Checkout Header */}
       <div className="border-b border-[#CCC5B9]/80 pb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+          <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
             SECURE TRANSACTION · 256-BIT ENCRYPTION
           </span>
           <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl text-[#252522] font-normal mt-1">
@@ -206,6 +210,61 @@ export default function CheckoutPage() {
           <span className="w-2 h-2 rounded-full bg-[#34483D] animate-pulse" />
           <span>Verified Demo Checkout Mode (No Real Money Charged)</span>
         </div>
+      </div>
+
+      {/* Mobile-Only Collapsible Order Summary Bar (< lg) */}
+      <div className="lg:hidden bg-[#E2D9C8] border border-[#CCC5B9] overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setShowMobileSummary(!showMobileSummary)}
+          className="w-full px-4 py-3.5 flex items-center justify-between text-left min-h-[48px]"
+        >
+          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#51292D]">
+            <ShoppingBag className="w-4 h-4 text-[#51292D]" />
+            <span>{showMobileSummary ? 'Hide Ledger Summary' : 'Show Ledger Summary'}</span>
+            {showMobileSummary ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </div>
+          <span className="font-serif text-base font-semibold text-[#51292D]">
+            ₹{total.toLocaleString('en-IN')}
+          </span>
+        </button>
+
+        {showMobileSummary && (
+          <div className="p-4 border-t border-[#CCC5B9]/60 bg-[#E2D9C8]/60 space-y-3">
+            <div className="divide-y divide-[#CCC5B9]/60 max-h-60 overflow-y-auto pr-1">
+              {cart.map((item) => (
+                <div key={item.id} className="py-2.5 flex gap-3 items-center">
+                  <div className="w-12 h-14 bg-[#E2D9C8] relative shrink-0 border border-[#CCC5B9]">
+                    <Image src={item.image} alt={item.name} fill className="object-cover" sizes="48px" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-serif text-xs text-[#252522] truncate">{item.name}</h4>
+                    <p className="text-[12px] font-mono text-[#252522]/60">Qty: {item.quantity}</p>
+                  </div>
+                  <span className="font-serif text-xs text-[#51292D] shrink-0 font-medium">
+                    ₹{(item.price * item.quantity).toLocaleString('en-IN')}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="space-y-1 text-xs font-mono pt-2 border-t border-[#CCC5B9]/60">
+              <div className="flex justify-between text-[#252522]/70">
+                <span>Subtotal</span>
+                <span>₹{subtotal.toLocaleString('en-IN')}</span>
+              </div>
+              {discount > 0 && (
+                <div className="flex justify-between text-[#34483D]">
+                  <span>Voucher Discount</span>
+                  <span>-₹{discount.toLocaleString('en-IN')}</span>
+                </div>
+              )}
+              <div className="flex justify-between text-[#252522]/70">
+                <span>Pan-India Courier</span>
+                <span>{shippingFee === 0 ? 'Complimentary' : `₹${shippingFee}`}</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <form onSubmit={handlePlaceOrder} className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
@@ -335,7 +394,7 @@ export default function CheckoutPage() {
             </label>
             {includeGiftPackaging && (
               <div className="pt-2 space-y-2 animate-in fade-in duration-200">
-                <label className="block text-[11px] font-mono uppercase text-[#252522]/70">
+                <label className="block text-[13px] font-mono uppercase text-[#252522]/70">
                   Hand-written Correspondence Message (Max 250 characters):
                 </label>
                 <textarea
@@ -481,7 +540,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-serif text-sm text-[#252522] truncate">{item.name}</h4>
-                  <p className="text-[11px] font-mono text-[#252522]/60">
+                  <p className="text-[13px] font-mono text-[#252522]/60">
                     Qty: {item.quantity} {item.variantTitle ? `· ${item.variantTitle}` : ''}
                   </p>
                 </div>
@@ -514,7 +573,7 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          <div className="pt-4 border-t border-[#CCC5B9]/60 space-y-2 text-[11px] text-[#252522]/60 font-sans leading-relaxed">
+          <div className="pt-4 border-t border-[#CCC5B9]/60 space-y-2 text-[13px] text-[#252522]/60 font-sans leading-relaxed">
             <p className="flex items-center gap-1.5 text-[#34483D] font-medium">
               <ShieldCheck className="w-4 h-4 text-[#34483D]" /> All taxes included. No unexpected fees upon arrival.
             </p>

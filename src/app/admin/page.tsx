@@ -40,10 +40,13 @@ import {
   Tag,
   Star,
   RefreshCw,
-  UserCheck
+  UserCheck,
+  Menu,
+  CheckCircle2
 } from 'lucide-react';
 import { useCommerce } from '@/lib/store/commerceStore';
 import { useAuth } from '@/lib/store/authStore';
+import { PaymentAdapter } from '@/lib/payments/razorpay';
 import { Product, Order, CmsSectionBlock, Coupon } from '@/types';
 
 export default function SuperAdminDashboard() {
@@ -103,6 +106,13 @@ export default function SuperAdminDashboard() {
   // Search in Admin
   const [adminSearchQuery, setAdminSearchQuery] = useState('');
   const [showNotificationsModal, setShowNotificationsModal] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [customerSearchQuery, setCustomerSearchQuery] = useState('');
+
+  const handleNav = (module: typeof activeModule) => {
+    setActiveModule(module);
+    setMobileNavOpen(false);
+  };
 
   // Selected sub-entities for editing/viewing
   const [selectedOrderForModal, setSelectedOrderForModal] = useState<Order | null>(null);
@@ -177,24 +187,36 @@ export default function SuperAdminDashboard() {
   return (
     <div className="min-h-screen bg-[#F3EFE6] text-[#252522] flex flex-col font-sans select-none">
       {/* Top Super Admin Utility Bar */}
-      <header className="h-16 bg-[#3C2921] text-[#F3EFE6] px-6 flex items-center justify-between border-b border-[#A58B5F]/40 sticky top-0 z-50 shadow-md">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="relative h-9 w-36">
+      <header className="h-16 bg-[#3C2921] text-[#F3EFE6] px-3 sm:px-6 flex items-center justify-between border-b border-[#A58B5F]/40 sticky top-0 z-50 shadow-md">
+        <div className="flex items-center gap-2 sm:gap-4">
+          {/* Mobile Menu Drawer Toggle */}
+          <button
+            onClick={() => setMobileNavOpen(true)}
+            className="lg:hidden p-2 text-[#E2D9C8] hover:text-[#F3EFE6] min-h-[44px] min-w-[44px] flex items-center justify-center -ml-1 transition-colors"
+            aria-label="Open Admin Navigation Menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+
+          <Link href="/" className="relative h-7 w-28 sm:h-9 sm:w-36">
             <Image
               src="/logo-nav.png"
               alt="Gulati & Sons"
               fill
               className="object-contain brightness-0 invert"
-              sizes="144px"
+              sizes="(max-width: 640px) 112px, 144px"
             />
           </Link>
-          <span className="hidden sm:inline-block px-2 py-0.5 bg-[#51292D] text-[#A58B5F] text-[10px] font-mono uppercase tracking-widest border border-[#A58B5F]/30">
+          <span className="hidden sm:inline-block px-2 py-0.5 bg-[#51292D] text-[#A58B5F] text-[12px] font-mono uppercase tracking-widest border border-[#A58B5F]/30">
             Super Administrator
+          </span>
+          <span className="lg:hidden text-[11px] font-mono uppercase px-2 py-0.5 bg-[#252522] text-[#A58B5F] border border-[#A58B5F]/30 truncate max-w-[120px]">
+            {activeModule}
           </span>
         </div>
 
         {/* Global Search & Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           {/* Universal Search Bar */}
           <div className="hidden md:flex items-center gap-2 bg-[#252522] border border-[#A58B5F]/40 px-3 py-1.5 w-64 text-xs font-mono">
             <Search className="w-3.5 h-3.5 text-[#A58B5F]" />
@@ -203,7 +225,7 @@ export default function SuperAdminDashboard() {
               value={adminSearchQuery}
               onChange={(e) => setAdminSearchQuery(e.target.value)}
               placeholder="Search orders, products, users (Ctrl+K)"
-              className="bg-transparent border-none outline-none text-[#F3EFE6] placeholder:text-[#E2D9C8]/40 w-full"
+              className="bg-transparent border-none outline-none text-[#F3EFE6] placeholder:text-[#E2D9C8]/40 w-full text-xs"
             />
           </div>
 
@@ -211,25 +233,25 @@ export default function SuperAdminDashboard() {
           <div className="relative">
             <button
               onClick={() => setShowNotificationsModal(!showNotificationsModal)}
-              className="p-2 text-[#E2D9C8] hover:text-[#F3EFE6] transition-colors relative"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-[#E2D9C8] hover:text-[#F3EFE6] transition-colors relative"
               aria-label="View notifications"
             >
               <Bell className="w-5 h-5" />
               {notifications.some((n) => !n.read) && (
-                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-[#51292D] rounded-full ring-2 ring-[#3C2921]" />
+                <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-[#51292D] rounded-full ring-2 ring-[#3C2921]" />
               )}
             </button>
 
             {/* Notifications Dropdown */}
             {showNotificationsModal && (
-              <div className="absolute right-0 mt-2 w-80 bg-[#252522] text-[#F3EFE6] border border-[#A58B5F]/40 shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-200">
+              <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-[#252522] text-[#F3EFE6] border border-[#A58B5F]/40 shadow-2xl p-4 space-y-3 z-50 animate-in fade-in duration-200">
                 <div className="flex justify-between items-center border-b border-[#A58B5F]/30 pb-2">
                   <span className="font-mono text-xs uppercase tracking-wider text-[#A58B5F]">
                     Alerts & Audit Events
                   </span>
                   <button
                     onClick={() => setShowNotificationsModal(false)}
-                    className="text-[#E2D9C8]/60 hover:text-[#F3EFE6]"
+                    className="text-[#E2D9C8]/60 hover:text-[#F3EFE6] p-1"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -244,8 +266,8 @@ export default function SuperAdminDashboard() {
                       }`}
                     >
                       <p className="font-semibold text-[#A58B5F]">{n.title}</p>
-                      <p className="text-[#E2D9C8]/80 text-[11px] mt-0.5">{n.message}</p>
-                      <span className="text-[9px] font-mono text-[#E2D9C8]/40 block mt-1">{n.timestamp}</span>
+                      <p className="text-[#E2D9C8]/80 text-[13px] mt-0.5">{n.message}</p>
+                      <span className="text-[11px] font-mono text-[#E2D9C8]/40 block mt-1">{n.timestamp}</span>
                     </div>
                   ))}
                 </div>
@@ -256,27 +278,253 @@ export default function SuperAdminDashboard() {
           {/* Exit / Return to storefront */}
           <Link
             href="/"
-            className="text-xs font-mono uppercase tracking-wider text-[#A58B5F] hover:text-[#F3EFE6] flex items-center gap-1.5"
+            className="text-xs font-mono uppercase tracking-wider text-[#A58B5F] hover:text-[#F3EFE6] flex items-center gap-1.5 min-h-[44px] px-2"
           >
-            <span>Live Store</span>
+            <span className="hidden sm:inline">Live Store</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </Link>
         </div>
       </header>
 
+      {/* Mobile Navigation Drawer */}
+      {mobileNavOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-[#252522]/85 backdrop-blur-sm lg:hidden animate-in fade-in duration-200"
+        >
+          <div className="absolute top-0 left-0 bottom-0 w-4/5 max-w-xs bg-[#3C2921] text-[#E2D9C8] p-4 flex flex-col justify-between overflow-y-auto shadow-2xl border-r border-[#A58B5F]/40 animate-in slide-in-from-left duration-300">
+            <div className="space-y-6">
+              <div className="flex justify-between items-center pb-3 border-b border-[#A58B5F]/30">
+                <div>
+                  <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F] block">
+                    Gulati & Sons
+                  </span>
+                  <span className="font-serif text-lg text-[#F3EFE6]">Executive Suite</span>
+                </div>
+                <button
+                  onClick={() => setMobileNavOpen(false)}
+                  className="p-2 text-[#E2D9C8]/70 hover:text-[#F3EFE6] min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  aria-label="Close navigation"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Core Operations in Drawer */}
+              <div className="space-y-1">
+                <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F] px-3 block mb-2">
+                  Core Operations
+                </span>
+
+                <button
+                  onClick={() => handleNav('home')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'home' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <LayoutDashboard className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Dashboard</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('edit')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'edit' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <Edit className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Visual CMS Edit</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('founder')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'founder' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <UserCheck className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Founder CMS</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('orders')}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'orders' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <ShoppingBag className="w-4 h-4 text-[#A58B5F]" />
+                    <span>Orders</span>
+                  </div>
+                  <span className="px-1.5 py-0.5 bg-[#51292D] text-[12px] text-[#F3EFE6]">
+                    {orders.length}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('users')}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'users' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Users className="w-4 h-4 text-[#A58B5F]" />
+                    <span>Patrons / Users</span>
+                  </div>
+                  <span className="px-1.5 py-0.5 bg-[#A58B5F]/20 text-[12px] text-[#A58B5F]">
+                    {customers.length}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('cart-users')}
+                  className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'cart-users' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <ShoppingCart className="w-4 h-4 text-[#A58B5F]" />
+                    <span>Cart Users</span>
+                  </div>
+                  <span className="px-1.5 py-0.5 bg-[#A58B5F]/20 text-[12px] text-[#A58B5F]">
+                    {activeCartUsers.length}
+                  </span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('add')}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'add' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <PlusCircle className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Add Product</span>
+                </button>
+              </div>
+
+              {/* Advanced Modules in Drawer */}
+              <div className="space-y-1 pt-3 border-t border-[#A58B5F]/20">
+                <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F] px-3 block mb-2">
+                  Advanced Administration
+                </span>
+
+                <button
+                  onClick={() => handleNav('inventory')}
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'inventory' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <Package className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Inventory & Stock</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('payments')}
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'payments' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <DollarSign className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Payments & Gateway</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('discounts')}
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'discounts' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <Tag className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Coupons & Offers</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('reviews')}
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'reviews' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <Star className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Reviews Moderation</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('analytics')}
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'analytics' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <TrendingUp className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Sales Analytics</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('audit')}
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'audit' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <FileText className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Audit Activity Log</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('trash')}
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'trash' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <Trash2 className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Trash Recovery ({trashProducts.length})</span>
+                </button>
+
+                <button
+                  onClick={() => handleNav('settings')}
+                  className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
+                    activeModule === 'settings' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                  }`}
+                >
+                  <Settings className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Store Settings</span>
+                </button>
+              </div>
+            </div>
+
+            {/* User footer in Drawer */}
+            <div className="pt-4 border-t border-[#A58B5F]/20 flex items-center justify-between text-xs font-mono">
+              <div>
+                <p className="text-[#F3EFE6] font-medium">Yashveer Singh</p>
+                <span className="text-[12px] text-[#A58B5F]">Owner / Super Admin</span>
+              </div>
+              <button
+                onClick={() => {
+                  logout();
+                  router.push('/admin/login');
+                }}
+                className="p-2 text-[#E2D9C8]/60 hover:text-[#F3EFE6]"
+                title="Log Out Admin"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Body with Sidebar Layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Navigation Sidebar */}
-        <aside className="w-64 bg-[#3C2921] text-[#E2D9C8] border-r border-[#A58B5F]/30 p-4 flex flex-col justify-between shrink-0">
+        {/* Desktop Navigation Sidebar (Hidden on mobile/tablet) */}
+        <aside className="hidden lg:flex w-64 bg-[#3C2921] text-[#E2D9C8] border-r border-[#A58B5F]/30 p-4 flex-col justify-between shrink-0">
           <div className="space-y-6">
             {/* Primary Nav Section */}
             <div className="space-y-1">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F] px-3 block mb-2">
+              <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F] px-3 block mb-2">
                 Core Operations
               </span>
 
               <button
-                onClick={() => setActiveModule('home')}
+                onClick={() => handleNav('home')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'home' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -286,7 +534,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('edit')}
+                onClick={() => handleNav('edit')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'edit' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -296,7 +544,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('founder')}
+                onClick={() => handleNav('founder')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'founder' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -306,7 +554,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('orders')}
+                onClick={() => handleNav('orders')}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'orders' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -315,23 +563,28 @@ export default function SuperAdminDashboard() {
                   <ShoppingBag className="w-4 h-4 text-[#A58B5F]" />
                   <span>Orders</span>
                 </div>
-                <span className="px-1.5 py-0.5 bg-[#51292D] text-[10px] text-[#F3EFE6]">
+                <span className="px-1.5 py-0.5 bg-[#51292D] text-[12px] text-[#F3EFE6]">
                   {orders.length}
                 </span>
               </button>
 
               <button
-                onClick={() => setActiveModule('users')}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                onClick={() => handleNav('users')}
+                className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'users' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
               >
-                <Users className="w-4 h-4 text-[#A58B5F]" />
-                <span>Patrons / Users</span>
+                <div className="flex items-center gap-3">
+                  <Users className="w-4 h-4 text-[#A58B5F]" />
+                  <span>Patrons / Users</span>
+                </div>
+                <span className="px-1.5 py-0.5 bg-[#A58B5F]/20 text-[12px] text-[#A58B5F]">
+                  {customers.length}
+                </span>
               </button>
 
               <button
-                onClick={() => setActiveModule('cart-users')}
+                onClick={() => handleNav('cart-users')}
                 className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'cart-users' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -340,13 +593,13 @@ export default function SuperAdminDashboard() {
                   <ShoppingCart className="w-4 h-4 text-[#A58B5F]" />
                   <span>Cart Users</span>
                 </div>
-                <span className="px-1.5 py-0.5 bg-[#A58B5F]/20 text-[10px] text-[#A58B5F]">
+                <span className="px-1.5 py-0.5 bg-[#A58B5F]/20 text-[12px] text-[#A58B5F]">
                   {activeCartUsers.length}
                 </span>
               </button>
 
               <button
-                onClick={() => setActiveModule('add')}
+                onClick={() => handleNav('add')}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'add' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -358,12 +611,12 @@ export default function SuperAdminDashboard() {
 
             {/* Secondary Modules */}
             <div className="space-y-1 pt-4 border-t border-[#A58B5F]/20">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F] px-3 block mb-2">
+              <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F] px-3 block mb-2">
                 Advanced Administration
               </span>
 
               <button
-                onClick={() => setActiveModule('inventory')}
+                onClick={() => handleNav('inventory')}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'inventory' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -373,7 +626,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('payments')}
+                onClick={() => handleNav('payments')}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'payments' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -383,7 +636,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('discounts')}
+                onClick={() => handleNav('discounts')}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'discounts' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -393,7 +646,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('reviews')}
+                onClick={() => handleNav('reviews')}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'reviews' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -403,7 +656,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('analytics')}
+                onClick={() => handleNav('analytics')}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'analytics' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -413,7 +666,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('audit')}
+                onClick={() => handleNav('audit')}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'audit' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -423,7 +676,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('trash')}
+                onClick={() => handleNav('trash')}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'trash' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -433,7 +686,7 @@ export default function SuperAdminDashboard() {
               </button>
 
               <button
-                onClick={() => setActiveModule('settings')}
+                onClick={() => handleNav('settings')}
                 className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-mono uppercase tracking-wider transition-colors ${
                   activeModule === 'settings' ? 'bg-[#51292D] text-[#F3EFE6]' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
                 }`}
@@ -448,7 +701,7 @@ export default function SuperAdminDashboard() {
           <div className="pt-4 border-t border-[#A58B5F]/20 flex items-center justify-between text-xs font-mono">
             <div>
               <p className="text-[#F3EFE6] font-medium">Yashveer Singh</p>
-              <span className="text-[10px] text-[#A58B5F]">Owner / Super Admin</span>
+              <span className="text-[12px] text-[#A58B5F]">Owner / Super Admin</span>
             </div>
             <button
               onClick={() => {
@@ -464,14 +717,14 @@ export default function SuperAdminDashboard() {
         </aside>
 
         {/* Main Content Workspace */}
-        <main className="flex-1 p-8 lg:p-12 overflow-y-auto">
+        <main className="flex-1 p-3.5 sm:p-6 lg:p-10 pb-24 lg:pb-12 overflow-y-auto w-full max-w-full">
           {/* ============================================================== */}
           {/* MODULE 1: DASHBOARD HOME */}
           {/* ============================================================== */}
           {activeModule === 'home' && (
             <div className="space-y-10 max-w-7xl">
               <div>
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   AT-A-GLANCE STORE HEALTH
                 </span>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -482,39 +735,39 @@ export default function SuperAdminDashboard() {
               {/* Top Quick Statistics (8 Key Indicators) */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9] shadow-sm">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Orders Today</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Orders Today</span>
                   <span className="font-serif text-3xl text-[#51292D] mt-1 block">{orders.length}</span>
                 </div>
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9] shadow-sm">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Revenue Today</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Revenue Today</span>
                   <span className="font-serif text-3xl text-[#34483D] mt-1 block">
                     ₹{totalRevenue.toLocaleString('en-IN')}
                   </span>
                 </div>
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9] shadow-sm">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Active Cart Users</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Active Cart Users</span>
                   <span className="font-serif text-3xl text-[#252522] mt-1 block">{activeCartUsers.length}</span>
                 </div>
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9] shadow-sm">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Low Stock Alerts</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Low Stock Alerts</span>
                   <span className={`font-serif text-3xl mt-1 block ${lowStockCount > 0 ? 'text-[#51292D]' : 'text-[#34483D]'}`}>
                     {lowStockCount}
                   </span>
                 </div>
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9] shadow-sm">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Pending Orders</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Pending Orders</span>
                   <span className="font-serif text-3xl text-[#51292D] mt-1 block">{pendingOrdersCount}</span>
                 </div>
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9] shadow-sm">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Total Customers</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Total Customers</span>
                   <span className="font-serif text-3xl text-[#252522] mt-1 block">{customers.length}</span>
                 </div>
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9] shadow-sm">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Failed Payments</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Failed Payments</span>
                   <span className="font-serif text-3xl text-[#34483D] mt-1 block">0</span>
                 </div>
                 <div className="p-5 bg-[#E2D9C8]/40 border border-[#CCC5B9] shadow-sm">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Average Order Value</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Average Order Value</span>
                   <span className="font-serif text-3xl text-[#252522] mt-1 block">
                     ₹{orders.length > 0 ? Math.round(totalRevenue / orders.length).toLocaleString('en-IN') : 0}
                   </span>
@@ -536,7 +789,7 @@ export default function SuperAdminDashboard() {
                     <Edit className="w-6 h-6 text-[#A58B5F] group-hover:scale-110 transition-transform" />
                     <div>
                       <h3 className="font-serif text-2xl font-medium">Edit</h3>
-                      <p className="text-[11px] text-[#E2D9C8]/70 font-mono mt-1">
+                      <p className="text-[13px] text-[#E2D9C8]/70 font-mono mt-1">
                         Visual Website Pages & Blocks
                       </p>
                     </div>
@@ -550,7 +803,7 @@ export default function SuperAdminDashboard() {
                     <UserCheck className="w-6 h-6 text-[#A58B5F] group-hover:scale-110 transition-transform" />
                     <div>
                       <h3 className="font-serif text-2xl font-medium">Founder</h3>
-                      <p className="text-[11px] text-[#E2D9C8]/70 font-mono mt-1">
+                      <p className="text-[13px] text-[#E2D9C8]/70 font-mono mt-1">
                         Varun Gulati Profile & Philosophy
                       </p>
                     </div>
@@ -564,7 +817,7 @@ export default function SuperAdminDashboard() {
                     <ShoppingBag className="w-6 h-6 text-[#A58B5F] group-hover:scale-110 transition-transform" />
                     <div>
                       <h3 className="font-serif text-2xl font-medium">Orders</h3>
-                      <p className="text-[11px] text-[#E2D9C8]/70 font-mono mt-1">
+                      <p className="text-[13px] text-[#E2D9C8]/70 font-mono mt-1">
                         Dispatch, Packing & Courier
                       </p>
                     </div>
@@ -578,7 +831,7 @@ export default function SuperAdminDashboard() {
                     <Users className="w-6 h-6 text-[#A58B5F] group-hover:scale-110 transition-transform" />
                     <div>
                       <h3 className="font-serif text-2xl font-medium">Users</h3>
-                      <p className="text-[11px] text-[#E2D9C8]/70 font-mono mt-1">
+                      <p className="text-[13px] text-[#E2D9C8]/70 font-mono mt-1">
                         Patron Dossiers & Lifetime Spend
                       </p>
                     </div>
@@ -592,7 +845,7 @@ export default function SuperAdminDashboard() {
                     <ShoppingCart className="w-6 h-6 text-[#A58B5F] group-hover:scale-110 transition-transform" />
                     <div>
                       <h3 className="font-serif text-2xl font-medium">Cart Users</h3>
-                      <p className="text-[11px] text-[#E2D9C8]/70 font-mono mt-1">
+                      <p className="text-[13px] text-[#E2D9C8]/70 font-mono mt-1">
                         Active Baskets & Concierge Outreach
                       </p>
                     </div>
@@ -606,7 +859,7 @@ export default function SuperAdminDashboard() {
                     <PlusCircle className="w-6 h-6 text-[#F3EFE6] group-hover:scale-110 transition-transform" />
                     <div>
                       <h3 className="font-serif text-2xl font-medium">Add</h3>
-                      <p className="text-[11px] text-[#E2D9C8]/80 font-mono mt-1">
+                      <p className="text-[13px] text-[#E2D9C8]/80 font-mono mt-1">
                         New Product, Category or Section
                       </p>
                     </div>
@@ -635,7 +888,7 @@ export default function SuperAdminDashboard() {
                         </div>
                         <div>
                           <h4 className="font-serif text-base text-[#252522]">{p.name}</h4>
-                          <span className="text-[11px] font-mono text-[#252522]/60">
+                          <span className="text-[13px] font-mono text-[#252522]/60">
                             SKU: {p.sku} · Stock: {p.stock} units
                           </span>
                         </div>
@@ -669,7 +922,7 @@ export default function SuperAdminDashboard() {
             <div className="space-y-8 max-w-5xl">
               <div className="flex justify-between items-end border-b border-[#CCC5B9]/80 pb-4">
                 <div>
-                  <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                  <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                     CONTENT MANAGEMENT SYSTEM
                   </span>
                   <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -705,12 +958,12 @@ export default function SuperAdminDashboard() {
                   >
                     <div className="space-y-1 max-w-xl">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 bg-[#51292D] text-[#F3EFE6] text-[10px] font-mono uppercase">
+                        <span className="px-2 py-0.5 bg-[#51292D] text-[#F3EFE6] text-[12px] font-mono uppercase">
                           Block {idx + 1}
                         </span>
                         <span className="text-xs font-mono text-[#A58B5F] uppercase">{sec.type}</span>
                         {!sec.visible && (
-                          <span className="text-[10px] font-mono text-[#51292D] border border-[#51292D] px-1.5 py-0.2">
+                          <span className="text-[12px] font-mono text-[#51292D] border border-[#51292D] px-1.5 py-0.2">
                             Hidden
                           </span>
                         )}
@@ -885,7 +1138,7 @@ export default function SuperAdminDashboard() {
                               title={c.name}
                             />
                           ))}
-                          <span className="font-mono text-[11px] ml-2 text-[#252522]/60">
+                          <span className="font-mono text-[13px] ml-2 text-[#252522]/60">
                             Current: {editingCmsSection.bgColor}
                           </span>
                         </div>
@@ -925,7 +1178,7 @@ export default function SuperAdminDashboard() {
             <div className="space-y-8 max-w-6xl">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#CCC5B9]/80 pb-4 gap-4">
                 <div>
-                  <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                  <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                     EDITORIAL CONTENT MANAGEMENT
                   </span>
                   <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1039,7 +1292,7 @@ export default function SuperAdminDashboard() {
                     </p>
                     {founderForm.bioParagraphs.map((para, idx) => (
                       <div key={idx}>
-                        <label className="block text-[11px] font-mono uppercase text-[#252522]/70 mb-1">
+                        <label className="block text-[13px] font-mono uppercase text-[#252522]/70 mb-1">
                           Narrative Paragraph {idx + 1}
                         </label>
                         <textarea
@@ -1170,7 +1423,7 @@ export default function SuperAdminDashboard() {
                 {/* Right 1 Col: Live Visual Preview Card */}
                 <div className="space-y-6">
                   <div className="p-6 bg-[#3C2921] text-[#F3EFE6] border border-[#A58B5F]/40 shadow-lg space-y-4 sticky top-6">
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#A58B5F] block">
+                    <span className="text-[12px] font-mono uppercase tracking-[0.2em] text-[#A58B5F] block">
                       Live Preview Snapshot
                     </span>
                     <div className="relative aspect-[3/4] w-full bg-[#252522] overflow-hidden border border-[#A58B5F]/30">
@@ -1185,7 +1438,7 @@ export default function SuperAdminDashboard() {
                     <div className="space-y-1">
                       <h4 className="font-serif text-xl text-[#F3EFE6]">{founderForm.name}</h4>
                       <p className="text-xs font-mono text-[#A58B5F]">{founderForm.title}</p>
-                      <p className="text-[11px] text-[#E2D9C8]/80 font-serif italic pt-2 border-t border-[#A58B5F]/20">
+                      <p className="text-[13px] text-[#E2D9C8]/80 font-serif italic pt-2 border-t border-[#A58B5F]/20">
                         &ldquo;{founderForm.personalStatement.slice(0, 110)}...&rdquo;
                       </p>
                     </div>
@@ -1212,7 +1465,7 @@ export default function SuperAdminDashboard() {
             <div className="space-y-6 max-w-7xl">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#CCC5B9]/80 pb-4 gap-4">
                 <div>
-                  <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                  <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                     TRANSACTION RECONCILIATION
                   </span>
                   <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1221,12 +1474,12 @@ export default function SuperAdminDashboard() {
                 </div>
 
                 {/* Filter Status Selector */}
-                <div className="flex flex-wrap gap-2 text-xs font-mono">
+                <div className="flex gap-2 text-xs font-mono overflow-x-auto pb-1 max-w-full">
                   {['all', 'new', 'processing', 'packed', 'shipped', 'delivered'].map((st) => (
                     <button
                       key={st}
                       onClick={() => setOrderFilter(st)}
-                      className={`px-3 py-1.5 uppercase transition-colors border ${
+                      className={`px-3 py-1.5 uppercase transition-colors border whitespace-nowrap min-h-[38px] ${
                         orderFilter === st
                           ? 'bg-[#51292D] text-[#F3EFE6] border-[#51292D]'
                           : 'bg-[#E2D9C8]/40 border-[#CCC5B9] text-[#252522] hover:bg-[#E2D9C8]'
@@ -1238,8 +1491,50 @@ export default function SuperAdminDashboard() {
                 </div>
               </div>
 
-              {/* Orders Table */}
-              <div className="border border-[#CCC5B9] bg-[#F3EFE6] shadow-sm overflow-x-auto">
+              {/* Mobile View: Responsive Order Cards (Under 768px) */}
+              <div className="md:hidden space-y-3">
+                {orders
+                  .filter((o) => orderFilter === 'all' || o.fulfillmentStatus === orderFilter)
+                  .map((ord) => (
+                    <div key={ord.id} className="p-4 bg-[#F3EFE6] border border-[#CCC5B9] shadow-sm space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <span className="font-mono font-bold text-base text-[#51292D]">#{ord.orderNumber}</span>
+                          <span className="font-serif text-base text-[#252522] block font-medium mt-0.5">{ord.customer.name}</span>
+                          <span className="text-[12px] font-mono text-[#252522]/60">
+                            {ord.shippingAddress.city}, {ord.shippingAddress.state}
+                          </span>
+                        </div>
+                        <span className="font-serif text-lg font-semibold text-[#252522]">
+                          ₹{ord.total.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2 text-[11px] font-mono uppercase pt-1">
+                        <span className="px-2 py-0.5 bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/20">
+                          {ord.paymentStatus}
+                        </span>
+                        <span className="px-2 py-0.5 bg-[#51292D]/10 text-[#51292D] border border-[#51292D]/20">
+                          {ord.fulfillmentStatus}
+                        </span>
+                        <span className="px-2 py-0.5 bg-[#E2D9C8] text-[#252522]/70">
+                          {ord.items.length} piece{ord.items.length > 1 ? 's' : ''}
+                        </span>
+                      </div>
+
+                      <button
+                        onClick={() => setSelectedOrderForModal(ord)}
+                        className="w-full py-2.5 bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider hover:bg-[#3C2921] transition-colors min-h-[44px] flex items-center justify-center gap-2"
+                      >
+                        <span>Manage Consignment</span>
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+              </div>
+
+              {/* Desktop View: Full Orders Table (768px and up) */}
+              <div className="hidden md:block border border-[#CCC5B9] bg-[#F3EFE6] shadow-sm overflow-x-auto">
                 <table className="w-full text-left text-xs font-mono">
                   <thead className="bg-[#E2D9C8]/70 border-b border-[#CCC5B9] text-[#252522]/80 uppercase">
                     <tr>
@@ -1260,26 +1555,26 @@ export default function SuperAdminDashboard() {
                           <td className="p-4 font-mono font-medium text-[#51292D]">#{ord.orderNumber}</td>
                           <td className="p-4">
                             <span className="font-medium text-[#252522] block">{ord.customer.name}</span>
-                            <span className="text-[11px] font-mono text-[#252522]/60">{ord.shippingAddress.city}, {ord.shippingAddress.state}</span>
+                            <span className="text-[13px] font-mono text-[#252522]/60">{ord.shippingAddress.city}, {ord.shippingAddress.state}</span>
                           </td>
                           <td className="p-4 font-mono">{ord.items.length}</td>
                           <td className="p-4 font-serif text-sm font-semibold text-[#252522]">
                             ₹{ord.total.toLocaleString('en-IN')}
                           </td>
                           <td className="p-4">
-                            <span className="text-[10px] font-mono uppercase px-2 py-0.5 bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/20">
+                            <span className="text-[12px] font-mono uppercase px-2 py-0.5 bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/20">
                               {ord.paymentStatus}
                             </span>
                           </td>
                           <td className="p-4">
-                            <span className="text-[10px] font-mono uppercase px-2 py-0.5 bg-[#51292D]/10 text-[#51292D] border border-[#51292D]/20">
+                            <span className="text-[12px] font-mono uppercase px-2 py-0.5 bg-[#51292D]/10 text-[#51292D] border border-[#51292D]/20">
                               {ord.fulfillmentStatus}
                             </span>
                           </td>
                           <td className="p-4">
                             <button
                               onClick={() => setSelectedOrderForModal(ord)}
-                              className="px-3 py-1 bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider hover:bg-[#3C2921]"
+                              className="px-3 py-1.5 bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider hover:bg-[#3C2921]"
                             >
                               Manage
                             </button>
@@ -1290,32 +1585,33 @@ export default function SuperAdminDashboard() {
                 </table>
               </div>
 
-              {/* Order Detail Modal */}
+              {/* Order Detail Modal (Responsive Dialog) */}
               {selectedOrderForModal && (
-                <div className="fixed inset-0 z-50 bg-[#252522]/80 backdrop-blur-sm flex items-center justify-center p-4">
-                  <div className="w-full max-w-2xl bg-[#F3EFE6] border border-[#A58B5F]/40 p-8 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+                <div className="fixed inset-0 z-50 bg-[#252522]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+                  <div className="w-full max-w-2xl bg-[#F3EFE6] border border-[#A58B5F]/40 p-5 sm:p-8 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto">
                     <div className="flex justify-between items-center border-b border-[#CCC5B9]/80 pb-3">
                       <div>
-                        <span className="text-[10px] font-mono uppercase text-[#A58B5F]">Order Management</span>
+                        <span className="text-[12px] font-mono uppercase text-[#A58B5F]">Order Management</span>
                         <h3 className="font-serif text-2xl text-[#252522]">
                           #{selectedOrderForModal.orderNumber}
                         </h3>
                       </div>
                       <button
                         onClick={() => setSelectedOrderForModal(null)}
-                        className="text-[#252522]/60 hover:text-[#51292D]"
+                        className="text-[#252522]/60 hover:text-[#51292D] p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                        aria-label="Close modal"
                       >
                         <X className="w-5 h-5" />
                       </button>
                     </div>
 
                     {/* Customer & Shipping snapshot */}
-                    <div className="grid grid-cols-2 gap-4 text-xs font-mono bg-[#E2D9C8]/40 p-4 border border-[#CCC5B9]">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono bg-[#E2D9C8]/40 p-4 border border-[#CCC5B9]">
                       <div>
                         <span className="text-[#252522]/50 uppercase block">Customer</span>
-                        <p className="font-medium text-[#252522]">{selectedOrderForModal.customer.name}</p>
+                        <p className="font-medium text-[#252522] text-sm">{selectedOrderForModal.customer.name}</p>
                         <p>{selectedOrderForModal.customer.phone}</p>
-                        <p>{selectedOrderForModal.customer.email}</p>
+                        <p className="truncate">{selectedOrderForModal.customer.email}</p>
                       </div>
                       <div>
                         <span className="text-[#252522]/50 uppercase block">Delivery Address</span>
@@ -1350,9 +1646,9 @@ export default function SuperAdminDashboard() {
                               updateOrderStatus(selectedOrderForModal.id, st);
                               setSelectedOrderForModal(null);
                             }}
-                            className="px-3 py-1.5 bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase hover:bg-[#3C2921]"
+                            className="px-3 py-2 bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase hover:bg-[#3C2921] min-h-[40px] flex items-center"
                           >
-                            Mark {st}
+                            Mark {st.replace('_', ' ')}
                           </button>
                         ))}
                       </div>
@@ -1361,7 +1657,7 @@ export default function SuperAdminDashboard() {
                     <div className="pt-2 text-right">
                       <button
                         onClick={() => setSelectedOrderForModal(null)}
-                        className="px-4 py-2 border border-[#CCC5B9] text-xs font-mono uppercase"
+                        className="px-6 py-2.5 border border-[#CCC5B9] text-xs font-mono uppercase min-h-[44px]"
                       >
                         Close
                       </button>
@@ -1373,12 +1669,169 @@ export default function SuperAdminDashboard() {
           )}
 
           {/* ============================================================== */}
+          {/* MODULE: PATRONS & USERS */}
+          {/* ============================================================== */}
+          {activeModule === 'users' && (
+            <div className="space-y-6 max-w-6xl">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#CCC5B9]/80 pb-4 gap-4">
+                <div>
+                  <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                    CLIENT DOSSIERS
+                  </span>
+                  <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
+                    Registered Patrons & Clients
+                  </h1>
+                  <p className="text-xs text-[#252522]/70 font-sans mt-1">
+                    Direct access to verified customer profiles, lifetime purchase records, and concierge outreach.
+                  </p>
+                </div>
+
+                {/* Customer Search Bar */}
+                <div className="flex items-center gap-2 bg-[#E2D9C8]/50 border border-[#CCC5B9] px-3 py-2 w-full sm:w-64 text-xs font-mono">
+                  <Search className="w-3.5 h-3.5 text-[#51292D]" />
+                  <input
+                    type="text"
+                    value={customerSearchQuery}
+                    onChange={(e) => setCustomerSearchQuery(e.target.value)}
+                    placeholder="Search patrons..."
+                    className="bg-transparent border-none outline-none text-[#252522] placeholder:text-[#252522]/50 w-full text-xs"
+                  />
+                </div>
+              </div>
+
+              {/* Patron Statistics Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div className="p-4 bg-[#E2D9C8]/40 border border-[#CCC5B9]">
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Total Dossiers</span>
+                  <span className="font-serif text-2xl sm:text-3xl text-[#51292D] mt-1 block">{customers.length}</span>
+                </div>
+                <div className="p-4 bg-[#E2D9C8]/40 border border-[#CCC5B9]">
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Active Baskets</span>
+                  <span className="font-serif text-2xl sm:text-3xl text-[#34483D] mt-1 block">{activeCartUsers.length}</span>
+                </div>
+                <div className="p-4 bg-[#E2D9C8]/40 border border-[#CCC5B9] col-span-2 sm:col-span-1">
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Verified VIPs</span>
+                  <span className="font-serif text-2xl sm:text-3xl text-[#252522] mt-1 block">
+                    {customers.filter((c) => c.role === 'admin' || c.ordersCount > 0).length}
+                  </span>
+                </div>
+              </div>
+
+              {/* Mobile View: Responsive Patron Cards */}
+              <div className="md:hidden space-y-3">
+                {customers
+                  .filter((c) =>
+                    !customerSearchQuery ||
+                    c.name.toLowerCase().includes(customerSearchQuery.toLowerCase()) ||
+                    c.email.toLowerCase().includes(customerSearchQuery.toLowerCase()) ||
+                    (c.phone && c.phone.includes(customerSearchQuery))
+                  )
+                  .map((cust) => (
+                    <div key={cust.id} className="p-4 bg-[#F3EFE6] border border-[#CCC5B9] shadow-sm space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-serif text-lg text-[#252522] font-medium">{cust.name}</h4>
+                          <span className="text-[12px] font-mono text-[#51292D] block">{cust.email}</span>
+                        </div>
+                        <span className="text-[11px] font-mono uppercase px-2 py-0.5 bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/20">
+                          {cust.role}
+                        </span>
+                      </div>
+
+                      <div className="text-xs font-mono text-[#252522]/70 space-y-1 pt-1 border-t border-[#CCC5B9]/50">
+                        {cust.phone && <p>Tel: {cust.phone}</p>}
+                        <p>Orders: {cust.ordersCount} · Lifetime Spend: ₹{(cust.lifetimeSpend || 0).toLocaleString('en-IN')}</p>
+                        {cust.addresses && cust.addresses[0] && (
+                          <p className="text-[12px] text-[#252522]/60">
+                            Location: {cust.addresses[0].city}, {cust.addresses[0].state}
+                          </p>
+                        )}
+                      </div>
+
+                      {cust.phone && (
+                        <a
+                          href={`https://wa.me/${cust.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(cust.name)}%2C%20Gulati%20%26%20Sons%20Concierge%20here...`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="w-full py-2.5 bg-[#34483D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider flex items-center justify-center gap-1.5 min-h-[44px] hover:bg-[#252522] transition-colors"
+                        >
+                          <MessageSquare className="w-4 h-4" />
+                          <span>WhatsApp Outreach</span>
+                        </a>
+                      )}
+                    </div>
+                  ))}
+              </div>
+
+              {/* Desktop View: Full Table */}
+              <div className="hidden md:block border border-[#CCC5B9] bg-[#F3EFE6] shadow-sm overflow-x-auto">
+                <table className="w-full text-left text-xs font-mono">
+                  <thead className="bg-[#E2D9C8]/70 border-b border-[#CCC5B9] text-[#252522]/80 uppercase">
+                    <tr>
+                      <th className="p-4">Patron</th>
+                      <th className="p-4">Contact</th>
+                      <th className="p-4">Primary Destination</th>
+                      <th className="p-4">Orders</th>
+                      <th className="p-4">Lifetime Spend</th>
+                      <th className="p-4">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#CCC5B9]/60 font-sans">
+                    {customers
+                      .filter((c) =>
+                        !customerSearchQuery ||
+                        c.name.toLowerCase().includes(customerSearchQuery.toLowerCase()) ||
+                        c.email.toLowerCase().includes(customerSearchQuery.toLowerCase()) ||
+                        (c.phone && c.phone.includes(customerSearchQuery))
+                      )
+                      .map((cust) => (
+                        <tr key={cust.id} className="hover:bg-[#E2D9C8]/30 transition-colors">
+                          <td className="p-4 font-serif text-sm font-medium text-[#252522]">
+                            {cust.name}
+                            <span className="block text-[11px] font-mono text-[#A58B5F] uppercase mt-0.5">{cust.role}</span>
+                          </td>
+                          <td className="p-4 font-mono text-xs">
+                            <span className="text-[#252522] block">{cust.email}</span>
+                            <span className="text-[#252522]/60">{cust.phone || 'No phone'}</span>
+                          </td>
+                          <td className="p-4 font-mono text-xs text-[#252522]/70">
+                            {cust.addresses && cust.addresses[0]
+                              ? `${cust.addresses[0].city}, ${cust.addresses[0].state}`
+                              : 'Not recorded'}
+                          </td>
+                          <td className="p-4 font-mono font-medium">{cust.ordersCount}</td>
+                          <td className="p-4 font-serif text-sm font-semibold text-[#51292D]">
+                            ₹{(cust.lifetimeSpend || 0).toLocaleString('en-IN')}
+                          </td>
+                          <td className="p-4">
+                            {cust.phone ? (
+                              <a
+                                href={`https://wa.me/${cust.phone.replace(/[^0-9]/g, '')}?text=Hello%20${encodeURIComponent(cust.name)}%2C%20Gulati%20%26%20Sons%20Concierge...`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-3 py-1.5 bg-[#34483D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider hover:bg-[#252522] inline-flex items-center gap-1"
+                              >
+                                Concierge
+                              </a>
+                            ) : (
+                              <span className="text-[#252522]/40 text-xs font-mono">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ============================================================== */}
           {/* MODULE 4: CART USERS (Active & Abandoned Baskets) */}
           {/* ============================================================== */}
           {activeModule === 'cart-users' && (
             <div className="space-y-6 max-w-5xl">
               <div className="border-b border-[#CCC5B9]/80 pb-4">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   BASKET SURVEILLANCE & RECOVERY
                 </span>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1398,7 +1851,7 @@ export default function SuperAdminDashboard() {
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
                         <span className="font-serif text-xl text-[#252522] font-medium">{cu.name}</span>
-                        <span className="text-[10px] font-mono uppercase px-2 py-0.5 bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/30">
+                        <span className="text-[12px] font-mono uppercase px-2 py-0.5 bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/30">
                           Contact Available
                         </span>
                       </div>
@@ -1453,7 +1906,7 @@ export default function SuperAdminDashboard() {
           {activeModule === 'add' && (
             <div className="space-y-8 max-w-4xl">
               <div className="border-b border-[#CCC5B9]/80 pb-4">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   CREATION SUITE
                 </span>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1733,7 +2186,7 @@ export default function SuperAdminDashboard() {
           {activeModule === 'inventory' && (
             <div className="space-y-6 max-w-5xl">
               <div className="border-b border-[#CCC5B9]/80 pb-4">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   STOCK LEVEL CONTROLS
                 </span>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1741,30 +2194,32 @@ export default function SuperAdminDashboard() {
                 </h1>
               </div>
 
-              <div className="border border-[#CCC5B9] bg-[#F3EFE6] divide-y divide-[#CCC5B9]/60">
+              <div className="border border-[#CCC5B9] bg-[#F3EFE6] divide-y divide-[#CCC5B9]/60 shadow-sm">
                 {products.map((p) => (
-                  <div key={p.id} className="p-4 flex items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
+                  <div key={p.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 sm:gap-4">
                       <div className="w-12 h-14 bg-[#E2D9C8] relative shrink-0 border border-[#CCC5B9]">
                         <Image src={p.images[0]?.url || ''} alt={p.name} fill className="object-cover" sizes="48px" />
                       </div>
                       <div>
                         <h4 className="font-serif text-base text-[#252522]">{p.name}</h4>
-                        <span className="text-[11px] font-mono text-[#252522]/60">SKU: {p.sku}</span>
+                        <span className="text-[13px] font-mono text-[#252522]/60">SKU: {p.sku}</span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                      <span className="text-xs font-mono text-[#252522]/70">Stock:</span>
-                      <input
-                        type="number"
-                        defaultValue={p.stock}
-                        onBlur={(e) => quickUpdateStock(p.id, Number(e.target.value))}
-                        className="w-20 px-2 py-1 bg-[#E2D9C8]/40 border border-[#CCC5B9] text-xs font-mono text-center outline-none focus:border-[#51292D]"
-                      />
+                    <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-[#CCC5B9]/40">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-mono text-[#252522]/70">Stock:</span>
+                        <input
+                          type="number"
+                          defaultValue={p.stock}
+                          onBlur={(e) => quickUpdateStock(p.id, Number(e.target.value))}
+                          className="w-20 px-2 py-1.5 bg-[#E2D9C8]/40 border border-[#CCC5B9] text-xs font-mono text-center outline-none focus:border-[#51292D]"
+                        />
+                      </div>
                       <button
                         onClick={() => deleteProduct(p.id)}
-                        className="p-1.5 text-[#252522]/50 hover:text-[#51292D] transition-colors"
+                        className="p-2 text-[#252522]/50 hover:text-[#51292D] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                         title="Move to Trash"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -1777,12 +2232,187 @@ export default function SuperAdminDashboard() {
           )}
 
           {/* ============================================================== */}
+          {/* MODULE: PAYMENTS & GATEWAY SETTINGS */}
+          {/* ============================================================== */}
+          {activeModule === 'payments' && (
+            <div className="space-y-6 max-w-5xl">
+              <div className="border-b border-[#CCC5B9]/80 pb-4">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                  FINANCIAL INFRASTRUCTURE
+                </span>
+                <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
+                  Payment Gateway Integration
+                </h1>
+                <p className="text-xs text-[#252522]/70 font-sans mt-1">
+                  Configure Razorpay processing mode, test simulated bank handshakes, and verify RBI PCI-DSS compliance parameters.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-4 sm:p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9] space-y-4 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono uppercase text-[#252522]/70">Gateway Mode</span>
+                    <span className="px-2.5 py-1 text-xs font-mono uppercase bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/30 font-semibold">
+                      {PaymentAdapter.getMode().toUpperCase()} MODE ACTIVE
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#252522]/80 leading-relaxed font-sans">
+                    Storefront transactions are safely operating in verified Interactive Demo Mode. In this state, customer orders undergo complete payment verification handshakes, generate unique transaction identifiers, and create confirmed orders without charging live credit cards.
+                  </p>
+                  <div className="p-3 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-mono space-y-2">
+                    <div className="flex justify-between">
+                      <span className="text-[#252522]/60">Razorpay Key ID:</span>
+                      <span className="text-[#252522] font-bold">
+                        {process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ? 'Configured on Server' : 'rzp_test_placeholder (Demo)'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#252522]/60">Supported Rails:</span>
+                      <span className="text-[#252522]">UPI · Cards · NetBanking · COD</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#252522]/60">Settlement Currency:</span>
+                      <span className="text-[#252522]">INR (₹)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-4 sm:p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9] space-y-4 shadow-sm">
+                  <span className="text-xs font-mono uppercase text-[#252522]/70 block">Banking Webhook & Verification</span>
+                  <p className="text-xs text-[#252522]/80 leading-relaxed font-sans">
+                    Webhook signatures are cryptographically validated against secret credentials at <code className="px-1.5 py-0.5 bg-[#F3EFE6] text-[#51292D] text-[11px] font-mono">/api/payments/verify</code>.
+                  </p>
+                  <div className="p-4 bg-[#F3EFE6] border border-[#CCC5B9] space-y-2">
+                    <span className="text-[12px] font-mono uppercase text-[#A58B5F] block">Production Switch Guide</span>
+                    <ol className="text-xs font-sans text-[#252522]/80 space-y-1.5 list-decimal pl-4">
+                      <li>Supply <code className="text-[#51292D] font-mono">NEXT_PUBLIC_RAZORPAY_KEY_ID</code> in environment.</li>
+                      <li>Supply <code className="text-[#51292D] font-mono">RAZORPAY_KEY_SECRET</code> in secure server variables.</li>
+                      <li>PaymentAdapter automatically transitions to Live RBI Domestic Settlement.</li>
+                    </ol>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ============================================================== */}
+          {/* MODULE: COUPONS & DISCOUNTS */}
+          {/* ============================================================== */}
+          {activeModule === 'discounts' && (
+            <div className="space-y-6 max-w-5xl">
+              <div className="border-b border-[#CCC5B9]/80 pb-4">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                  PROMOTIONAL ARCHITECTURE
+                </span>
+                <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
+                  Coupons & Private Invitations
+                </h1>
+                <p className="text-xs text-[#252522]/70 font-sans mt-1">
+                  Issue private acquisition vouchers, percentage privileges, and minimum basket requirements.
+                </p>
+              </div>
+
+              {/* Add New Coupon Card */}
+              <div className="p-4 sm:p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9] space-y-4 shadow-sm">
+                <h3 className="font-serif text-lg text-[#252522]">Create New Promotional Voucher</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase text-[#252522]/70 mb-1">Coupon Code</label>
+                    <input
+                      type="text"
+                      value={newCouponCode}
+                      onChange={(e) => setNewCouponCode(e.target.value.toUpperCase())}
+                      placeholder="e.g. HERITAGE15"
+                      className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-mono uppercase outline-none focus:border-[#51292D]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase text-[#252522]/70 mb-1">Discount Type</label>
+                    <select
+                      value={newCouponType}
+                      onChange={(e) => setNewCouponType(e.target.value as any)}
+                      className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-sans outline-none focus:border-[#51292D]"
+                    >
+                      <option value="percentage">Percentage (%)</option>
+                      <option value="fixed">Fixed Amount (₹)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase text-[#252522]/70 mb-1">Value ({newCouponType === 'percentage' ? '%' : '₹'})</label>
+                    <input
+                      type="number"
+                      value={newCouponVal}
+                      onChange={(e) => setNewCouponVal(Number(e.target.value))}
+                      className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-mono outline-none focus:border-[#51292D]"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase text-[#252522]/70 mb-1">Min Cart Value (₹)</label>
+                    <input
+                      type="number"
+                      value={newCouponMin}
+                      onChange={(e) => setNewCouponMin(Number(e.target.value))}
+                      className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-mono outline-none focus:border-[#51292D]"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end pt-2">
+                  <button
+                    onClick={() => {
+                      if (!newCouponCode.trim()) return;
+                      addCoupon({
+                        id: 'cp-' + Date.now().toString(36),
+                        code: newCouponCode.trim().toUpperCase(),
+                        type: newCouponType,
+                        value: newCouponVal,
+                        minCartValue: newCouponMin,
+                        active: true,
+                        usageCount: 0
+                      });
+                      setNewCouponCode('');
+                    }}
+                    className="px-6 py-2.5 bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider hover:bg-[#3C2921] transition-colors min-h-[44px]"
+                  >
+                    Issue Coupon
+                  </button>
+                </div>
+              </div>
+
+              {/* Active Coupons List */}
+              <div className="border border-[#CCC5B9] bg-[#F3EFE6] divide-y divide-[#CCC5B9]/60 shadow-sm">
+                {coupons.map((c) => (
+                  <div key={c.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-base font-bold text-[#51292D]">{c.code}</span>
+                        <span className="text-[11px] font-mono uppercase px-2 py-0.5 bg-[#34483D]/10 text-[#34483D] border border-[#34483D]/20">
+                          {c.active ? 'Active' : 'Expired'}
+                        </span>
+                      </div>
+                      <p className="text-xs font-sans text-[#252522]/70">
+                        {c.type === 'percentage' ? `${c.value}% reduction` : `₹${c.value} discount`} · Min Cart ₹{c.minCartValue.toLocaleString('en-IN')}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => deleteCoupon(c.id)}
+                      className="px-3 py-1.5 border border-[#51292D] text-[#51292D] text-xs font-mono uppercase hover:bg-[#51292D] hover:text-[#F3EFE6] transition-colors self-start sm:self-auto min-h-[38px]"
+                    >
+                      Revoke
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* ============================================================== */}
           {/* MODULE 7: AUDIT LOG */}
           {/* ============================================================== */}
           {activeModule === 'audit' && (
             <div className="space-y-6 max-w-5xl">
               <div className="border-b border-[#CCC5B9]/80 pb-4">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   SECURITY & TRACEABILITY
                 </span>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1799,7 +2429,7 @@ export default function SuperAdminDashboard() {
                     </div>
                     <div className="text-right shrink-0">
                       <span className="text-[#A58B5F] block">{log.admin}</span>
-                      <span className="text-[#252522]/40 text-[10px] block">{log.timestamp}</span>
+                      <span className="text-[#252522]/40 text-[12px] block">{log.timestamp}</span>
                     </div>
                   </div>
                 ))}
@@ -1813,7 +2443,7 @@ export default function SuperAdminDashboard() {
           {activeModule === 'trash' && (
             <div className="space-y-6 max-w-5xl">
               <div className="border-b border-[#CCC5B9]/80 pb-4">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   SAFETY RETENTION
                 </span>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1827,7 +2457,7 @@ export default function SuperAdminDashboard() {
                     <div key={tp.id} className="p-4 flex items-center justify-between gap-4">
                       <div>
                         <h4 className="font-serif text-base text-[#252522]">{tp.name}</h4>
-                        <span className="text-[11px] font-mono text-[#252522]/60">SKU: {tp.sku}</span>
+                        <span className="text-[13px] font-mono text-[#252522]/60">SKU: {tp.sku}</span>
                       </div>
                       <div className="flex gap-2">
                         <button
@@ -1858,7 +2488,7 @@ export default function SuperAdminDashboard() {
           {activeModule === 'settings' && (
             <div className="space-y-6 max-w-3xl">
               <div className="border-b border-[#CCC5B9]/80 pb-4">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   OPERATIONAL PARAMETERS
                 </span>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1918,7 +2548,7 @@ export default function SuperAdminDashboard() {
           {activeModule === 'reviews' && (
             <div className="space-y-6 max-w-5xl">
               <div className="border-b border-[#CCC5B9]/80 pb-4">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   PATRON FEEDBACK VERIFICATION
                 </span>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1934,7 +2564,7 @@ export default function SuperAdminDashboard() {
                         <span className="font-semibold text-sm">{rev.authorName}</span>
                         <span className="text-xs font-mono text-[#252522]/50 ml-2">({rev.productName})</span>
                       </div>
-                      <span className={`text-[10px] font-mono uppercase px-2 py-0.5 border ${
+                      <span className={`text-[12px] font-mono uppercase px-2 py-0.5 border ${
                         rev.status === 'approved' ? 'bg-[#34483D]/10 text-[#34483D] border-[#34483D]' : 'bg-[#51292D]/10 text-[#51292D] border-[#51292D]'
                       }`}>
                         {rev.status}
@@ -1971,7 +2601,7 @@ export default function SuperAdminDashboard() {
           {activeModule === 'analytics' && (
             <div className="space-y-6 max-w-5xl">
               <div className="border-b border-[#CCC5B9]/80 pb-4">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   COMMERCE PERFORMANCE
                 </span>
                 <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
@@ -1981,15 +2611,15 @@ export default function SuperAdminDashboard() {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9]">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Total Gross Merchandise Value</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Total Gross Merchandise Value</span>
                   <span className="font-serif text-3xl text-[#51292D] mt-2 block">₹{totalRevenue.toLocaleString('en-IN')}</span>
                 </div>
                 <div className="p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9]">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Completed Acquisitions</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Completed Acquisitions</span>
                   <span className="font-serif text-3xl text-[#252522] mt-2 block">{orders.length} Orders</span>
                 </div>
                 <div className="p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9]">
-                  <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Top Category by Sales</span>
+                  <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Top Category by Sales</span>
                   <span className="font-serif text-2xl text-[#34483D] mt-2 block">Artisanal Fragrance</span>
                 </div>
               </div>
@@ -1997,6 +2627,65 @@ export default function SuperAdminDashboard() {
           )}
         </main>
       </div>
+
+      {/* Mobile Admin Bottom Quick-Bar */}
+      <nav
+        aria-label="Mobile Administration Navigation"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#3C2921] border-t border-[#A58B5F]/40 px-2 py-1 flex items-center justify-around shadow-2xl"
+      >
+        <button
+          onClick={() => handleNav('home')}
+          className={`flex flex-col items-center justify-center min-h-[48px] py-1 px-3 text-[11px] font-mono uppercase tracking-wider transition-colors ${
+            activeModule === 'home' ? 'text-[#F3EFE6] font-bold' : 'text-[#A58B5F] hover:text-[#F3EFE6]'
+          }`}
+        >
+          <LayoutDashboard className="w-5 h-5 mb-0.5" />
+          <span>Home</span>
+        </button>
+
+        <button
+          onClick={() => handleNav('orders')}
+          className={`flex flex-col items-center justify-center min-h-[48px] py-1 px-3 text-[11px] font-mono uppercase tracking-wider transition-colors relative ${
+            activeModule === 'orders' ? 'text-[#F3EFE6] font-bold' : 'text-[#A58B5F] hover:text-[#F3EFE6]'
+          }`}
+        >
+          <ShoppingBag className="w-5 h-5 mb-0.5" />
+          <span>Orders</span>
+          {orders.length > 0 && (
+            <span className="absolute top-1 right-2 px-1.5 bg-[#51292D] text-[10px] text-[#F3EFE6] rounded-full">
+              {orders.length}
+            </span>
+          )}
+        </button>
+
+        <button
+          onClick={() => handleNav('add')}
+          className={`flex flex-col items-center justify-center min-h-[48px] py-1 px-3 text-[11px] font-mono uppercase tracking-wider transition-colors ${
+            activeModule === 'add' ? 'text-[#F3EFE6] font-bold' : 'text-[#A58B5F] hover:text-[#F3EFE6]'
+          }`}
+        >
+          <PlusCircle className="w-5 h-5 mb-0.5 text-[#E2D9C8]" />
+          <span>Add</span>
+        </button>
+
+        <button
+          onClick={() => handleNav('inventory')}
+          className={`flex flex-col items-center justify-center min-h-[48px] py-1 px-3 text-[11px] font-mono uppercase tracking-wider transition-colors ${
+            activeModule === 'inventory' ? 'text-[#F3EFE6] font-bold' : 'text-[#A58B5F] hover:text-[#F3EFE6]'
+          }`}
+        >
+          <Package className="w-5 h-5 mb-0.5" />
+          <span>Stock</span>
+        </button>
+
+        <button
+          onClick={() => setMobileNavOpen(true)}
+          className="flex flex-col items-center justify-center min-h-[48px] py-1 px-3 text-[11px] font-mono uppercase tracking-wider text-[#A58B5F] hover:text-[#F3EFE6]"
+        >
+          <Sliders className="w-5 h-5 mb-0.5" />
+          <span>Menu</span>
+        </button>
+      </nav>
     </div>
   );
 }

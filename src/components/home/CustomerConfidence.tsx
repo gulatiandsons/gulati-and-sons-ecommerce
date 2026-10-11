@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { CheckCircle2, Star } from 'lucide-react';
@@ -41,15 +41,15 @@ export default function CustomerConfidence() {
             {rev.authorName}
           </span>
           {rev.verifiedPurchase && (
-            <span className="text-[10px] font-mono text-[#34483D] flex items-center gap-1 flex-shrink-0">
+            <span className="text-[12px] font-mono text-[#34483D] flex items-center gap-1 flex-shrink-0">
               <CheckCircle2 className="w-3 h-3 text-[#34483D]" /> Verified Patron
             </span>
           )}
         </div>
-        <p className="text-[11px] font-mono text-[#252522]/65 truncate">
+        <p className="text-[13px] font-mono text-[#252522]/65 truncate">
           Acquired: {rev.productName}
         </p>
-        <span className="text-[10px] font-mono text-[#252522]/40 block">{rev.date}</span>
+        <span className="text-[12px] font-mono text-[#252522]/40 block">{rev.date}</span>
       </div>
     </div>
   );
@@ -62,7 +62,7 @@ export default function CustomerConfidence() {
       <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 mb-12 sm:mb-16">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               PATRON EXPERIENCES
             </span>
             <h2

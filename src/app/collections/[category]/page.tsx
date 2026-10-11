@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
@@ -84,7 +84,7 @@ export default function CollectionPage() {
 
       {/* Editorial Header */}
       <div className="space-y-4 max-w-3xl border-b border-[#CCC5B9]/60 pb-8">
-        <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
           {categorySubheading}
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#252522] font-normal leading-tight">
@@ -160,7 +160,7 @@ export default function CollectionPage() {
       {/* Active Filter Chips */}
       {(selectedTag || inStockOnly) && (
         <div className="flex flex-wrap items-center gap-2 pt-2">
-          <span className="text-[11px] font-mono text-[#252522]/60 uppercase">Active Refinements:</span>
+          <span className="text-[13px] font-mono text-[#252522]/60 uppercase">Active Refinements:</span>
           {selectedTag && (
             <button
               onClick={() => setSelectedTag(null)}

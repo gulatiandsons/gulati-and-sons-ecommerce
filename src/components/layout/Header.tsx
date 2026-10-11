@@ -64,12 +64,12 @@ export default function Header() {
         <div className="flex items-center gap-4 lg:w-1/4">
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="lg:hidden p-2 -ml-2 text-current hover:opacity-75 transition-opacity"
+            className="lg:hidden p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center -ml-2 text-current hover:opacity-75 transition-opacity"
             aria-label="Open mobile menu"
           >
             <Menu className="w-6 h-6" />
           </button>
-          <div className="hidden lg:flex items-center gap-2 text-[11px] font-mono tracking-[0.2em] uppercase opacity-80">
+          <div className="hidden lg:flex items-center gap-2 text-[13px] font-mono tracking-[0.2em] uppercase opacity-80">
             <span>India</span>
             <span>·</span>
             <span>INR (₹)</span>
@@ -93,11 +93,11 @@ export default function Header() {
         </div>
 
         {/* Right: Actions (Search, Wishlist, Account, Bag) */}
-        <div className="flex items-center justify-end gap-3 sm:gap-5 lg:w-1/4">
+        <div className="flex items-center justify-end gap-1.5 sm:gap-4 lg:w-1/4">
           {/* Global Search */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="p-2 text-current hover:text-[#51292D] transition-colors flex items-center gap-1.5"
+            className="p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-current hover:text-[#51292D] transition-colors gap-1.5"
             aria-label="Search collection"
           >
             <Search className="w-5 h-5" />
@@ -107,19 +107,19 @@ export default function Header() {
           {/* Wishlist */}
           <Link
             href="/wishlist"
-            className="p-2 text-current hover:text-[#51292D] transition-colors relative"
+            className="p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-current hover:text-[#51292D] transition-colors relative"
             aria-label="Saved Items"
           >
             <Heart className="w-5 h-5" />
             {mounted && wishlist.length > 0 && (
-              <span className="absolute top-1 right-1 w-2 h-2 bg-[#51292D] rounded-full" />
+              <span className="absolute top-2 right-2 w-2 h-2 bg-[#51292D] rounded-full" />
             )}
           </Link>
 
           {/* Account */}
           <Link
             href="/account"
-            className="p-2 text-current hover:text-[#51292D] transition-colors hidden sm:block"
+            className="p-2.5 min-h-[44px] min-w-[44px] items-center justify-center text-current hover:text-[#51292D] transition-colors hidden sm:flex"
             aria-label="Patron Account"
             title={mounted && currentUser ? `Account: ${currentUser.name}` : 'Patron Account'}
             suppressHydrationWarning
@@ -131,7 +131,7 @@ export default function Header() {
           {mounted && isAdmin && (
             <Link
               href="/admin"
-              className="text-[10px] uppercase font-mono px-2 py-0.5 bg-[#51292D] text-[#F3EFE6] tracking-wider rounded-sm hidden sm:inline-block"
+              className="text-[12px] uppercase font-mono px-2 py-1 bg-[#51292D] text-[#F3EFE6] tracking-wider rounded-sm hidden sm:inline-block"
             >
               Admin
             </Link>
@@ -140,7 +140,7 @@ export default function Header() {
           {/* Bag */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="p-2 text-current hover:text-[#51292D] transition-colors flex items-center gap-1.5 relative"
+            className="p-2.5 min-h-[44px] min-w-[44px] flex items-center justify-center text-current hover:text-[#51292D] transition-colors gap-1.5 relative"
             aria-label="Shopping bag"
           >
             <ShoppingBag className="w-5 h-5" />
@@ -175,7 +175,7 @@ export default function Header() {
             {activeMegaMenu === 'fragrance' && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 w-[720px] bg-[#F3EFE6] text-[#252522] border border-[#A58B5F]/30 shadow-2xl p-8 grid grid-cols-4 gap-6 animate-in fade-in duration-200">
                 <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Shop All</p>
+                  <p className="text-[13px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Shop All</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
                     <li><Link href="/collections/fragrances" className="hover:text-[#51292D]">All Fragrances</Link></li>
                     <li><Link href="/collections/fragrances?family=oud" className="hover:text-[#51292D]">Oud & Amber</Link></li>
@@ -183,7 +183,7 @@ export default function Header() {
                   </ul>
                 </div>
                 <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">By Character</p>
+                  <p className="text-[13px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">By Character</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
                     <li><Link href="/collections/fragrances?character=woody" className="hover:text-[#51292D]">Woody & Smokey</Link></li>
                     <li><Link href="/collections/fragrances?character=fresh" className="hover:text-[#51292D]">Sunlit Citrus</Link></li>
@@ -191,7 +191,7 @@ export default function Header() {
                   </ul>
                 </div>
                 <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Occasion</p>
+                  <p className="text-[13px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Occasion</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
                     <li><Link href="/collections/fragrances?occasion=everyday" className="hover:text-[#51292D]">Everyday Sillage</Link></li>
                     <li><Link href="/collections/fragrances?occasion=evening" className="hover:text-[#51292D]">Black Tie & Evenings</Link></li>
@@ -200,11 +200,11 @@ export default function Header() {
                 </div>
                 <div className="bg-[#E2D9C8]/40 p-4 border border-[#CCC5B9]/60 flex flex-col justify-between">
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">Signature</span>
+                    <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">Signature</span>
                     <h5 className="font-serif text-sm text-[#252522] mt-1">Bella Vita OUD Gold</h5>
-                    <p className="text-[11px] text-[#252522]/70 mt-1 normal-case tracking-normal">Woody oriental parfum in 50ml flacon.</p>
+                    <p className="text-[13px] text-[#252522]/70 mt-1 normal-case tracking-normal">Woody oriental parfum in 50ml flacon.</p>
                   </div>
-                  <Link href="/products/bella-vita-luxury-oud-gold-eau-de-parfum" className="text-[11px] text-[#51292D] font-medium uppercase tracking-wider mt-3">
+                  <Link href="/products/bella-vita-luxury-oud-gold-eau-de-parfum" className="text-[13px] text-[#51292D] font-medium uppercase tracking-wider mt-3">
                     Explore Bottle &rarr;
                   </Link>
                 </div>
@@ -228,7 +228,7 @@ export default function Header() {
             {activeMegaMenu === 'watches' && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 w-[720px] bg-[#F3EFE6] text-[#252522] border border-[#A58B5F]/30 shadow-2xl p-8 grid grid-cols-4 gap-6 animate-in fade-in duration-200">
                 <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Horology</p>
+                  <p className="text-[13px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Horology</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
                     <li><Link href="/collections/watches" className="hover:text-[#51292D]">All Timepieces</Link></li>
                     <li><Link href="/collections/watches?style=sports" className="hover:text-[#51292D]">Luxury Sports</Link></li>
@@ -236,7 +236,7 @@ export default function Header() {
                   </ul>
                 </div>
                 <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Materials</p>
+                  <p className="text-[13px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Materials</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
                     <li><Link href="/collections/watches?material=rolesor" className="hover:text-[#51292D]">Yellow Rolesor</Link></li>
                     <li><Link href="/collections/watches?material=oystersteel" className="hover:text-[#51292D]">Oystersteel</Link></li>
@@ -244,7 +244,7 @@ export default function Header() {
                   </ul>
                 </div>
                 <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Horological Care</p>
+                  <p className="text-[13px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Horological Care</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
                     <li><Link href="/journal/demystifying-watch-case-proportions" className="hover:text-[#51292D]">Case Size Guide</Link></li>
                     <li><Link href="/support" className="hover:text-[#51292D]">Authenticity & Care</Link></li>
@@ -252,11 +252,11 @@ export default function Header() {
                 </div>
                 <div className="bg-[#3C2921] text-[#F3EFE6] p-4 flex flex-col justify-between">
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">Featured View</span>
+                    <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">Featured View</span>
                     <h5 className="font-serif text-sm mt-1">Submariner 126613LN</h5>
-                    <p className="text-[11px] text-[#E2D9C8]/70 mt-1 normal-case tracking-normal">Interactive Watchmaker 3D Explorer.</p>
+                    <p className="text-[13px] text-[#E2D9C8]/70 mt-1 normal-case tracking-normal">Interactive Watchmaker 3D Explorer.</p>
                   </div>
-                  <Link href="/products/rolex-submariner-date-126613ln" className="text-[11px] text-[#A58B5F] uppercase tracking-wider mt-3">
+                  <Link href="/products/rolex-submariner-date-126613ln" className="text-[13px] text-[#A58B5F] uppercase tracking-wider mt-3">
                     Launch Inspector &rarr;
                   </Link>
                 </div>
@@ -296,7 +296,7 @@ export default function Header() {
             {activeMegaMenu === 'house' && (
               <div className="absolute top-full left-1/2 -translate-x-1/2 w-[580px] bg-[#F3EFE6] text-[#252522] border border-[#A58B5F]/30 shadow-2xl p-6 grid grid-cols-3 gap-6 animate-in fade-in duration-200">
                 <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Our Legacy</p>
+                  <p className="text-[13px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Our Legacy</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
                     <li><Link href="/founder" className="hover:text-[#51292D] font-medium text-[#51292D]">The Founder (Varun Gulati)</Link></li>
                     <li><Link href="/the-house" className="hover:text-[#51292D]">The Private House</Link></li>
@@ -305,7 +305,7 @@ export default function Header() {
                   </ul>
                 </div>
                 <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Services</p>
+                  <p className="text-[13px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Services</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
                     <li><Link href="/gifting" className="hover:text-[#51292D]">Bespoke Gifting</Link></li>
                     <li><Link href="/delivery" className="hover:text-[#51292D]">Pan-India Delivery</Link></li>
@@ -313,7 +313,7 @@ export default function Header() {
                   </ul>
                 </div>
                 <div>
-                  <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Assistance</p>
+                  <p className="text-[13px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Assistance</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
                     <li><Link href="/track-order" className="hover:text-[#51292D]">Order Tracking</Link></li>
                     <li><Link href="/shipping" className="hover:text-[#51292D]">Shipping Standards</Link></li>
@@ -431,7 +431,7 @@ export default function Header() {
               >
                 <User className="w-4 h-4" /> Account & Orders
               </Link>
-              <p className="text-[11px] font-mono text-[#252522]/60">
+              <p className="text-[13px] font-mono text-[#252522]/60">
                 Pan-India White Glove Concierge
               </p>
             </div>

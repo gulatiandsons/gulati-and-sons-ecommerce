@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export default function PrivacyPage() {
   return (
     <div className="w-full pt-28 pb-32 px-6 sm:px-10 lg:px-16 max-w-4xl mx-auto space-y-12">
       <div className="border-b border-[#CCC5B9]/80 pb-8 space-y-2">
-        <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
           PRIVACY STEWARDSHIP
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl text-[#252522] font-normal">

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -40,7 +40,7 @@ export default function PersonalSelection() {
     >
       <div className="max-w-4xl mx-auto space-y-10">
         <div className="text-center space-y-2">
-          <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+          <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
             PRIVATE CONSULTATION
           </span>
           <h2
@@ -170,7 +170,7 @@ export default function PersonalSelection() {
 
                 <div className="md:col-span-7 space-y-4">
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                    <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
                       {matchedProduct.categoryLabel}
                     </span>
                     <h3 className="font-serif text-2xl sm:text-3xl text-[#252522] mt-1">

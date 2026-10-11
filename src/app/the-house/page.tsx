@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
@@ -14,7 +14,7 @@ export default function TheHousePage() {
     <div className="w-full pt-28 pb-32 px-6 sm:px-10 lg:px-16 max-w-5xl mx-auto space-y-16">
       {/* Title */}
       <div className="text-center space-y-4 max-w-2xl mx-auto border-b border-[#CCC5B9]/80 pb-12">
-        <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.3em] text-[#51292D] block">
           THE PRIVATE HOUSE
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#252522] font-normal leading-tight">
@@ -65,7 +65,7 @@ export default function TheHousePage() {
       {/* Founder Editorial Crosslink */}
       <div className="p-8 bg-[#E2D9C8]/50 border border-[#CCC5B9] flex flex-col sm:flex-row items-center justify-between gap-6 max-w-3xl mx-auto">
         <div className="space-y-1 text-center sm:text-left">
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#51292D]">The Founder Behind The House</span>
+          <span className="text-[12px] font-mono uppercase tracking-[0.2em] text-[#51292D]">The Founder Behind The House</span>
           <h3 className="font-serif text-2xl text-[#252522]">Meet Varun Gulati</h3>
           <p className="text-xs text-[#252522]/75 font-sans">Discover the personal style and craftsmanship philosophy behind the house.</p>
         </div>

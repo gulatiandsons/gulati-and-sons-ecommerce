@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -17,7 +17,7 @@ export default function CuratedSelection() {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 sm:mb-16 gap-4">
           <div className="space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               THE CURATED SELECTION
             </span>
             <h2

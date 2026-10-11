@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -84,7 +84,7 @@ export default function QuickViewModal() {
         <div className="md:w-[48%] p-6 sm:p-8 flex flex-col justify-between overflow-y-auto">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-[11px] uppercase tracking-[0.2em] font-mono text-[#A58B5F]">
+              <span className="text-[13px] uppercase tracking-[0.2em] font-mono text-[#A58B5F]">
                 {product.categoryLabel}
               </span>
               <button
@@ -118,7 +118,7 @@ export default function QuickViewModal() {
 
             {/* Demonstration notice */}
             {product.isDemonstration && (
-              <div className="mb-6 p-3 bg-[#E2D9C8]/60 border border-[#A58B5F]/40 text-[11px] text-[#3C2921] leading-relaxed">
+              <div className="mb-6 p-3 bg-[#E2D9C8]/60 border border-[#A58B5F]/40 text-[13px] text-[#3C2921] leading-relaxed">
                 <span className="font-semibold block uppercase tracking-wider mb-1 flex items-center gap-1">
                   <Shield className="w-3.5 h-3.5 text-[#51292D]" /> Prototype Demonstration Listing
                 </span>
@@ -129,7 +129,7 @@ export default function QuickViewModal() {
             {/* Variant selector */}
             {product.variants.length > 1 && (
               <div className="mb-6">
-                <label className="block text-[11px] uppercase tracking-[0.15em] font-mono text-[#252522]/70 mb-2">
+                <label className="block text-[13px] uppercase tracking-[0.15em] font-mono text-[#252522]/70 mb-2">
                   Select Edition / Size:
                 </label>
                 <div className="flex flex-wrap gap-2">

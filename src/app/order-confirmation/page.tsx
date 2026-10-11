@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { Suspense } from 'react';
 import Image from 'next/image';
@@ -22,7 +22,7 @@ function ConfirmationContent() {
           <span className="font-serif text-3xl text-[#51292D] font-light">G&S</span>
         </div>
 
-        <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-[#34483D] flex items-center justify-center gap-1.5 font-medium">
+        <span className="text-[13px] font-mono uppercase tracking-[0.3em] text-[#34483D] flex items-center justify-center gap-1.5 font-medium">
           <CheckCircle2 className="w-4 h-4 text-[#34483D]" /> TRANSACTION VERIFIED & SECURED
         </span>
 
@@ -79,7 +79,7 @@ function ConfirmationContent() {
         {/* Shipping Destination & Gift Notes */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 text-xs font-sans">
           <div className="space-y-1.5 p-4 bg-[#F3EFE6] border border-[#CCC5B9]">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D] flex items-center gap-1 font-semibold">
+            <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D] flex items-center gap-1 font-semibold">
               <MapPin className="w-3.5 h-3.5" /> Destination Dispatch Address
             </span>
             <p className="font-medium text-[#252522]">{order?.customer.name}</p>
@@ -91,7 +91,7 @@ function ConfirmationContent() {
           </div>
 
           <div className="space-y-1.5 p-4 bg-[#F3EFE6] border border-[#CCC5B9]">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F] flex items-center gap-1 font-semibold">
+            <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F] flex items-center gap-1 font-semibold">
               <Truck className="w-3.5 h-3.5" /> Transit & Timeline Expectation
             </span>
             <p className="text-[#252522]/80 leading-relaxed">

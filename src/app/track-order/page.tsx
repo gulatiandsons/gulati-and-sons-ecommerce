@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -32,7 +32,7 @@ export default function TrackOrderPage() {
   return (
     <div className="w-full pt-28 pb-32 px-6 sm:px-10 lg:px-16 max-w-4xl mx-auto space-y-12">
       <div className="border-b border-[#CCC5B9]/80 pb-8 space-y-2">
-        <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
           LOGISTICS SURVEILLANCE
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl text-[#252522] font-normal">
@@ -96,7 +96,7 @@ export default function TrackOrderPage() {
         <div className="p-8 bg-[#F3EFE6] border border-[#A58B5F]/40 shadow-md space-y-8 animate-in fade-in duration-300">
           <div className="flex flex-col sm:flex-row justify-between sm:items-center pb-6 border-b border-[#CCC5B9]/60 gap-4">
             <div>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D]">
+              <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D]">
                 Verified Order
               </span>
               <h2 className="font-serif text-2xl text-[#252522] mt-0.5">#{searchedOrder.orderNumber}</h2>
@@ -123,7 +123,7 @@ export default function TrackOrderPage() {
                 <div key={idx} className="relative space-y-1">
                   <span className="absolute -left-[31px] top-1 w-3 h-3 rounded-full bg-[#51292D] ring-4 ring-[#F3EFE6]" />
                   <p className="font-serif text-base text-[#252522] font-medium">{event.title}</p>
-                  <p className="text-[11px] font-mono text-[#252522]/60">{event.timestamp}</p>
+                  <p className="text-[13px] font-mono text-[#252522]/60">{event.timestamp}</p>
                   {event.note && (
                     <p className="text-xs text-[#252522]/80 font-sans italic">{event.note}</p>
                   )}

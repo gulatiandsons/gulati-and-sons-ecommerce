@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -21,7 +21,7 @@ export default function HouseEdit() {
       <div className="max-w-7xl mx-auto space-y-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               THE HOUSE EDIT
             </span>
             <h2

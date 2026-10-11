@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -11,7 +11,7 @@ export default function CloserLook() {
     >
       <div className="max-w-7xl mx-auto space-y-12">
         <div className="space-y-2">
-          <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+          <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
             MATERIAL STORYTELLING
           </span>
           <h2
@@ -39,7 +39,7 @@ export default function CloserLook() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#252522]/80 via-transparent to-transparent pointer-events-none" />
 
             <div className="absolute bottom-6 left-6 right-6 text-[#F3EFE6]">
-              <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">
+              <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
                 DETAIL 01
               </span>
               <h3 className="font-serif text-2xl font-medium mt-0.5">Glass & Light</h3>
@@ -63,7 +63,7 @@ export default function CloserLook() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#252522]/80 via-transparent to-transparent pointer-events-none" />
 
               <div className="absolute bottom-4 left-4 right-4 text-[#F3EFE6]">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
                   DETAIL 02
                 </span>
                 <h4 className="font-serif text-lg font-medium mt-0.5">The Horological Bezel</h4>
@@ -85,7 +85,7 @@ export default function CloserLook() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#252522]/80 via-transparent to-transparent pointer-events-none" />
 
               <div className="absolute bottom-4 left-4 right-4 text-[#F3EFE6]">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
                   DETAIL 03
                 </span>
                 <h4 className="font-serif text-lg font-medium mt-0.5">Supple Nappa Grain</h4>

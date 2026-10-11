@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -52,7 +52,7 @@ export default function EverydayRitual() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#252522]/50 via-transparent to-transparent pointer-events-none" />
 
               <div className="absolute bottom-6 left-6 text-[#F3EFE6]">
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
                   Formulation Format
                 </span>
                 <h4 className="font-serif text-xl sm:text-2xl mt-0.5">{selectedFormat.name}</h4>
@@ -63,7 +63,7 @@ export default function EverydayRitual() {
 
           {/* Right Column: Editorial & Format Switching */}
           <div className="lg:col-span-6 space-y-6 order-1 lg:order-2">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               CHAPTER III. THE EVERYDAY
             </span>
 

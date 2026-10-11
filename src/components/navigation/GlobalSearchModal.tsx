@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
@@ -149,7 +149,7 @@ export default function GlobalSearchModal() {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <span className="text-[10px] uppercase tracking-[0.2em] text-[#A58B5F] font-mono">
+                      <span className="text-[12px] uppercase tracking-[0.2em] text-[#A58B5F] font-mono">
                         {p.categoryLabel}
                       </span>
                       <h4 className="font-serif text-base text-[#252522] group-hover:text-[#51292D] truncate">
@@ -161,7 +161,7 @@ export default function GlobalSearchModal() {
                       <p className="font-sans font-medium text-sm text-[#252522]">
                         ₹{p.price.toLocaleString('en-IN')}
                       </p>
-                      <span className="text-[11px] text-[#51292D] flex items-center justify-end gap-1 mt-1 group-hover:translate-x-1 transition-transform">
+                      <span className="text-[13px] text-[#51292D] flex items-center justify-end gap-1 mt-1 group-hover:translate-x-1 transition-transform">
                         View <ArrowRight className="w-3 h-3" />
                       </span>
                     </div>

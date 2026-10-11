@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -38,13 +38,13 @@ export default function Footer() {
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 text-xs font-mono tracking-wider text-[#A58B5F]">
             <div>
-              <span className="block text-[10px] text-[#E2D9C8]/50 uppercase">Concierge Desk</span>
+              <span className="block text-[12px] text-[#E2D9C8]/50 uppercase">Concierge Desk</span>
               <a href={BUSINESS_CONFIG.phoneTelLink} className="text-[#E2D9C8] hover:text-[#A58B5F] transition-colors">
                 {BUSINESS_CONFIG.phoneFormatted}
               </a>
             </div>
             <div>
-              <span className="block text-[10px] text-[#E2D9C8]/50 uppercase">Direct Inquiries</span>
+              <span className="block text-[12px] text-[#E2D9C8]/50 uppercase">Direct Inquiries</span>
               <a href={BUSINESS_CONFIG.emailMailtoLink} className="text-[#E2D9C8] hover:text-[#A58B5F] transition-colors">
                 {BUSINESS_CONFIG.email}
               </a>
@@ -114,7 +114,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar with subtle administrator access emoji 📩 */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#E2D9C8]/60 font-mono gap-4">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-[13px] text-[#E2D9C8]/60 font-mono gap-4">
           <p>© 2026 GULATI & SONS · All Rights Reserved.</p>
 
           <div className="flex items-center gap-6">

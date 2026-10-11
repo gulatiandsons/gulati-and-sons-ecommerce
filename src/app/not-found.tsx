@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
@@ -9,7 +9,7 @@ export default function NotFound() {
         <span className="font-serif text-3xl text-[#51292D]">404</span>
       </div>
 
-      <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+      <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
         PAGE NOT DISCOVERED
       </span>
 

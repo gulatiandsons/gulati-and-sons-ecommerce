@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -16,7 +16,7 @@ export default function HousePhilosophy() {
       </div>
 
       <div className="max-w-4xl mx-auto text-center relative z-10 space-y-8">
-        <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-[#A58B5F] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.3em] text-[#A58B5F] block">
           THE HOUSE PHILOSOPHY
         </span>
 

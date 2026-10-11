@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -59,7 +59,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Prototype/Demo Badge if applicable */}
         {product.isDemonstration && (
-          <span className="absolute top-3 left-3 z-10 px-2 py-0.5 bg-[#3C2921]/90 text-[#F3EFE6] text-[9px] font-mono uppercase tracking-widest">
+          <span className="absolute top-3 left-3 z-10 px-2 py-0.5 bg-[#3C2921]/90 text-[#F3EFE6] text-[11px] font-mono uppercase tracking-widest">
             Prototype Demo
           </span>
         )}
@@ -68,7 +68,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         <div className="absolute inset-x-0 bottom-0 p-3 hidden sm:flex justify-center translate-y-full group-hover:translate-y-0 transition-transform duration-300 z-10">
           <button
             onClick={() => setQuickViewProduct(product)}
-            className="w-full py-2.5 bg-[#252522]/90 hover:bg-[#51292D] text-[#F3EFE6] backdrop-blur-md text-[11px] font-sans uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-1.5 shadow-md"
+            className="w-full py-2.5 bg-[#252522]/90 hover:bg-[#51292D] text-[#F3EFE6] backdrop-blur-md text-[13px] font-sans uppercase tracking-[0.2em] transition-colors flex items-center justify-center gap-1.5 shadow-md"
           >
             <Eye className="w-3.5 h-3.5" /> Quick View
           </button>
@@ -78,7 +78,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Product Information */}
       <div className="pt-4 flex flex-col justify-between flex-1 space-y-1">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#A58B5F] block">
+          <span className="text-[12px] font-mono uppercase tracking-[0.2em] text-[#A58B5F] block">
             {product.categoryLabel}
           </span>
           <h3 className="font-serif text-base sm:text-lg text-[#252522] group-hover:text-[#51292D] transition-colors leading-snug line-clamp-1 mt-0.5">
@@ -102,7 +102,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               </span>
             )}
           </div>
-          <span className="text-[11px] font-mono text-[#51292D] uppercase tracking-wider">
+          <span className="text-[13px] font-mono text-[#51292D] uppercase tracking-wider">
             {product.variants[0]?.title || 'Stocked'}
           </span>
         </div>

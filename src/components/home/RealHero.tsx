@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -29,10 +29,10 @@ export default function RealHero() {
         {/* Left Column (43% ~ 5 cols) */}
         <div className="lg:col-span-5 space-y-6 lg:space-y-8 z-10">
           <div className="space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               THE HOUSE OF GULATI
             </span>
-            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#A58B5F] block">
+            <span className="text-[12px] font-mono uppercase tracking-[0.2em] text-[#A58B5F] block">
               EST. IN TASTE, NOT IN YEARS
             </span>
           </div>
@@ -105,7 +105,7 @@ export default function RealHero() {
               >
                 <span className="w-2 h-2 rounded-full bg-[#51292D] group-hover:bg-[#F3EFE6] animate-pulse" />
                 <div className="text-left">
-                  <span className="block text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                  <span className="block text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
                     Featured Scent
                   </span>
                   <span className="block font-serif text-xs font-medium">
@@ -122,7 +122,7 @@ export default function RealHero() {
               >
                 <Compass className="w-3.5 h-3.5 text-[#A58B5F]" />
                 <div className="text-left">
-                  <span className="block text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                  <span className="block text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
                     Horology Explorer
                   </span>
                   <span className="block font-serif text-xs font-medium">

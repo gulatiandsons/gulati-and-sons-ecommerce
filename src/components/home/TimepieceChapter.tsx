@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Image from 'next/image';
@@ -52,7 +52,7 @@ export default function TimepieceChapter() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left: Heading & Specifications */}
           <div className="lg:col-span-5 space-y-6">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#A58B5F] block">
               CHAPTER II. TIME
             </span>
 
@@ -106,7 +106,7 @@ export default function TimepieceChapter() {
               <div className="absolute top-4 left-4 flex gap-2 z-20">
                 <button
                   onClick={() => setActiveAngle(0)}
-                  className={`px-3 py-1 text-[10px] font-mono uppercase tracking-wider border transition-colors ${
+                  className={`px-3 py-1 text-[12px] font-mono uppercase tracking-wider border transition-colors ${
                     activeAngle === 0 ? 'bg-[#51292D] border-[#51292D] text-[#F3EFE6]' : 'bg-[#252522]/80 border-[#A58B5F]/40 text-[#E2D9C8]'
                   }`}
                 >
@@ -114,7 +114,7 @@ export default function TimepieceChapter() {
                 </button>
                 <button
                   onClick={() => setActiveAngle(1)}
-                  className={`px-3 py-1 text-[10px] font-mono uppercase tracking-wider border transition-colors ${
+                  className={`px-3 py-1 text-[12px] font-mono uppercase tracking-wider border transition-colors ${
                     activeAngle === 1 ? 'bg-[#51292D] border-[#51292D] text-[#F3EFE6]' : 'bg-[#252522]/80 border-[#A58B5F]/40 text-[#E2D9C8]'
                   }`}
                 >
@@ -122,7 +122,7 @@ export default function TimepieceChapter() {
                 </button>
                 <button
                   onClick={() => setActiveAngle(2)}
-                  className={`px-3 py-1 text-[10px] font-mono uppercase tracking-wider border transition-colors ${
+                  className={`px-3 py-1 text-[12px] font-mono uppercase tracking-wider border transition-colors ${
                     activeAngle === 2 ? 'bg-[#51292D] border-[#51292D] text-[#F3EFE6]' : 'bg-[#252522]/80 border-[#A58B5F]/40 text-[#E2D9C8]'
                   }`}
                 >
@@ -151,7 +151,7 @@ export default function TimepieceChapter() {
               <div className="absolute bottom-4 inset-x-4 z-20 bg-[#252522]/95 backdrop-blur-md p-4 border border-[#A58B5F]/40 flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-[#A58B5F]">
+                    <span className="text-[12px] font-mono uppercase tracking-widest text-[#A58B5F]">
                       HOTSPOT SPECIFICATION
                     </span>
                     <span className="text-xs font-serif text-[#F3EFE6] font-medium">
@@ -167,7 +167,7 @@ export default function TimepieceChapter() {
             </div>
 
             {/* Strict Prototype Disclaimer */}
-            <p className="text-[11px] text-[#E2D9C8]/50 font-mono mt-3 leading-relaxed flex items-center gap-1.5">
+            <p className="text-[13px] text-[#E2D9C8]/50 font-mono mt-3 leading-relaxed flex items-center gap-1.5">
               <ShieldAlert className="w-3.5 h-3.5 text-[#A58B5F] shrink-0" />
               Demonstration listing only. Gulati & Sons is not an authorized Rolex retailer and does not claim affiliation.
             </p>

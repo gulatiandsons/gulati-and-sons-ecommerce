@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -15,7 +15,7 @@ export default function HouseJournal() {
       <div className="max-w-7xl mx-auto space-y-12">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               EDITORIAL PERSPECTIVE
             </span>
             <h2
@@ -55,7 +55,7 @@ export default function HouseJournal() {
               </Link>
 
               <div className="space-y-2">
-                <div className="flex items-center gap-3 text-[10px] font-mono text-[#A58B5F] uppercase tracking-widest">
+                <div className="flex items-center gap-3 text-[12px] font-mono text-[#A58B5F] uppercase tracking-widest">
                   <span>{article.category}</span>
                   <span>·</span>
                   <span>{article.readTime}</span>

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
@@ -14,7 +14,7 @@ export default function JournalPage() {
   return (
     <div className="w-full pt-28 pb-32 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto space-y-16">
       <div className="max-w-3xl space-y-4 border-b border-[#CCC5B9]/80 pb-8">
-        <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
           THE HOUSE JOURNAL
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#252522] font-normal">
@@ -39,7 +39,7 @@ export default function JournalPage() {
             </Link>
 
             <div className="space-y-2">
-              <div className="flex items-center gap-3 text-[10px] font-mono text-[#A58B5F] uppercase tracking-widest">
+              <div className="flex items-center gap-3 text-[12px] font-mono text-[#A58B5F] uppercase tracking-widest">
                 <span>{article.category}</span>
                 <span>·</span>
                 <span>{article.readTime}</span>

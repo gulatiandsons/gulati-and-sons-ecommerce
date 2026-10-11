@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { ShieldCheck, Truck, Lock, Clock } from 'lucide-react';
@@ -34,7 +34,7 @@ export default function HouseStandard() {
     >
       <div className="max-w-7xl mx-auto space-y-16">
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+          <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
             THE HOUSE STANDARD
           </span>
           <h2

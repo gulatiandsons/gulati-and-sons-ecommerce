@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import Image from 'next/image';
@@ -49,7 +49,7 @@ export default function FounderPage() {
             {/* Left Narrative Column (7 cols) */}
             <div className="lg:col-span-7 space-y-6">
               <div className="space-y-2">
-                <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.3em] text-[#51292D] block">
                   THE FOUNDER BEHIND GULATI & SONS
                 </span>
                 <h1
@@ -69,7 +69,7 @@ export default function FounderPage() {
               </p>
 
               {/* Administrative portrait note indicator */}
-              <div className="pt-4 border-t border-[#CCC5B9]/50 flex items-center gap-2 text-[11px] font-mono text-[#252522]/55">
+              <div className="pt-4 border-t border-[#CCC5B9]/50 flex items-center gap-2 text-[13px] font-mono text-[#252522]/55">
                 <span className="w-2 h-2 rounded-full bg-[#A58B5F]" />
                 <span>Private House Curation · Managed via Superadmin</span>
               </div>
@@ -89,7 +89,7 @@ export default function FounderPage() {
                 {/* Subtle luxury paper overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#252522]/40 via-transparent to-transparent pointer-events-none" />
 
-                <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#F3EFE6]/90 backdrop-blur-md border border-[#A58B5F]/30 text-[10px] font-mono uppercase tracking-wider text-[#252522] text-center">
+                <div className="absolute bottom-4 left-4 right-4 p-3 bg-[#F3EFE6]/90 backdrop-blur-md border border-[#A58B5F]/30 text-[12px] font-mono uppercase tracking-wider text-[#252522] text-center">
                   <span>{founderContent.name} · Founder</span>
                 </div>
               </div>
@@ -104,7 +104,7 @@ export default function FounderPage() {
         >
           <div className="space-y-8">
             <div className="space-y-2">
-              <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+              <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                 AN INTRODUCTION
               </span>
               <h2
@@ -132,7 +132,7 @@ export default function FounderPage() {
         >
           <div className="max-w-7xl mx-auto space-y-16">
             <div className="text-center max-w-3xl mx-auto space-y-3">
-              <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+              <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                 THE SELECTION PRINCIPLES
               </span>
               <h2
@@ -154,7 +154,7 @@ export default function FounderPage() {
                   className="p-8 bg-[#F3EFE6] border border-[#CCC5B9] space-y-4 shadow-sm flex flex-col justify-between"
                 >
                   <div className="space-y-3">
-                    <span className="text-[11px] font-mono text-[#A58B5F] block">
+                    <span className="text-[13px] font-mono text-[#A58B5F] block">
                       0{idx + 1} / PRINCIPLE
                     </span>
                     <h3 className="font-serif text-xl text-[#252522] font-normal">
@@ -178,7 +178,7 @@ export default function FounderPage() {
           <div className="space-y-12">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
               <div className="space-y-2">
-                <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
                   CURATED EXPRESSIONS
                 </span>
                 <h2
@@ -198,7 +198,7 @@ export default function FounderPage() {
               {/* Fragrance */}
               <div className="bg-[#E2D9C8]/30 border border-[#CCC5B9] p-8 flex flex-col justify-between space-y-6">
                 <div className="space-y-3">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D]">Chapter I</span>
+                  <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D]">Chapter I</span>
                   <h3 className="font-serif text-2xl text-[#252522]">Fragrance & Ouds</h3>
                   <p className="font-sans text-xs text-[#252522]/75 leading-relaxed font-light">
                     Extrait-strength extractions, wild agarwood resins, honeyed amber, and cold-pressed citrus crafted for longevity and quiet sillage.
@@ -215,7 +215,7 @@ export default function FounderPage() {
               {/* Timepieces */}
               <div className="bg-[#E2D9C8]/30 border border-[#CCC5B9] p-8 flex flex-col justify-between space-y-6">
                 <div className="space-y-3">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D]">Chapter II</span>
+                  <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D]">Chapter II</span>
                   <h3 className="font-serif text-2xl text-[#252522]">Timepieces</h3>
                   <p className="font-sans text-xs text-[#252522]/75 leading-relaxed font-light">
                     Mechanical complications and architectural proportions selected as physical markers of horological conviction.
@@ -232,7 +232,7 @@ export default function FounderPage() {
               {/* Outerwear & Atelier */}
               <div className="bg-[#E2D9C8]/30 border border-[#CCC5B9] p-8 flex flex-col justify-between space-y-6">
                 <div className="space-y-3">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#51292D]">Chapter III</span>
+                  <span className="text-[12px] font-mono uppercase tracking-widest text-[#51292D]">Chapter III</span>
                   <h3 className="font-serif text-2xl text-[#252522]">Outerwear & Leather</h3>
                   <p className="font-sans text-xs text-[#252522]/75 leading-relaxed font-light">
                     Full-grain drum-dyed lambskin, antique brass hardware, and bespoke Cupro linings built to develop rich patina with wear.
@@ -258,7 +258,7 @@ export default function FounderPage() {
             <Quote className="w-10 h-10 text-[#A58B5F] mx-auto opacity-75" />
 
             <div className="space-y-3">
-              <span className="text-[11px] font-mono uppercase tracking-[0.3em] text-[#A58B5F] block">
+              <span className="text-[13px] font-mono uppercase tracking-[0.3em] text-[#A58B5F] block">
                 {founderContent.personalStatementHeading}
               </span>
               <p
@@ -284,7 +284,7 @@ export default function FounderPage() {
           className="py-20 md:py-24 px-6 sm:px-10 lg:px-16 max-w-7xl mx-auto text-center space-y-8"
         >
           <div className="space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               CONTINUE THE DISCOVERY
             </span>
             <h2

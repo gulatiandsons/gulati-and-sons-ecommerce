@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -48,7 +48,7 @@ export default function StateDeliveryPage() {
 
       {/* Header */}
       <div className="max-w-3xl space-y-4 border-b border-[#CCC5B9]/80 pb-8">
-        <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+        <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
           LOGISTICS SPECIFICATION · {region.type.toUpperCase()}
         </span>
         <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#252522] font-normal">
@@ -62,22 +62,22 @@ export default function StateDeliveryPage() {
       {/* Logistics Overview Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9] space-y-1">
-          <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Capital / Administrative Hub</span>
+          <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Capital / Administrative Hub</span>
           <p className="font-serif text-xl text-[#252522]">{region.capital}</p>
         </div>
 
         <div className="p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9] space-y-1">
-          <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Estimated Transit Window</span>
+          <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Estimated Transit Window</span>
           <p className="font-serif text-xl text-[#51292D] font-medium">{region.estimatedDays}</p>
         </div>
 
         <div className="p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9] space-y-1">
-          <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Primary Regional Hub</span>
+          <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Primary Regional Hub</span>
           <p className="font-serif text-xl text-[#252522]">{region.hubCity}</p>
         </div>
 
         <div className="p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9] space-y-1">
-          <span className="text-[10px] font-mono uppercase text-[#252522]/60 block">Postal Prefix Spectrum</span>
+          <span className="text-[12px] font-mono uppercase text-[#252522]/60 block">Postal Prefix Spectrum</span>
           <p className="font-mono text-sm text-[#34483D] font-medium">{region.serviceablePincodesRange}</p>
         </div>
       </div>
@@ -134,7 +134,7 @@ export default function StateDeliveryPage() {
       <div className="space-y-6 pt-6 border-t border-[#CCC5B9]/80">
         <div className="flex justify-between items-end">
           <div>
-            <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+            <span className="text-[13px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
               AVAILABLE FOR DIRECT DISPATCH
             </span>
             <h2 className="font-serif text-2xl sm:text-3xl text-[#252522] mt-1">
