@@ -84,13 +84,35 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isProcessing) return;
+
     if (cart.length === 0) {
       router.push('/collections/all');
       return;
     }
 
-    if (!name || !email || !phone || !addressLine1 || !city || !pincode) {
+    if (!name.trim() || !email.trim() || !phone.trim() || !addressLine1.trim() || !city.trim() || !pincode.trim()) {
       setErrorMsg('Please complete all required shipping fields.');
+      return;
+    }
+
+    // Strict Indian PIN code validation (6 digits, non-zero starting digit)
+    const cleanedPincode = pincode.trim();
+    if (!/^[1-9][0-9]{5}$/.test(cleanedPincode)) {
+      setErrorMsg('Please enter a valid 6-digit Indian Postal PIN code (e.g., 110003).');
+      return;
+    }
+
+    // Email validation
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setErrorMsg('Please enter a valid email address for dispatch updates.');
+      return;
+    }
+
+    // Phone validation (10 digits)
+    const cleanedPhone = phone.replace(/[^0-9]/g, '');
+    if (cleanedPhone.length < 10) {
+      setErrorMsg('Please enter a valid 10-digit mobile number for courier SMS notifications.');
       return;
     }
 

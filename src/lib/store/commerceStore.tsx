@@ -1,10 +1,12 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product, CartItem, Order, CustomerUser, Coupon, Review, CmsSectionBlock } from '@/types';
+import { Product, CartItem, Order, CustomerUser, Coupon, Review, CmsSectionBlock, FounderContent } from '@/types';
 import { SEED_PRODUCTS } from '@/lib/data/products';
 import { SEED_REVIEWS } from '@/lib/data/reviews';
 import { INITIAL_CMS_SECTIONS } from '@/lib/data/initialCms';
+import { BUSINESS_CONFIG } from '@/lib/config/business';
+import { INITIAL_FOUNDER_CONTENT } from '@/lib/data/initialFounder';
 
 export interface AuditLogItem {
   id: string;
@@ -43,22 +45,23 @@ export interface StoreSettings {
 }
 
 const DEFAULT_SETTINGS: StoreSettings = {
-  storeName: 'Gulati & Sons',
+  storeName: BUSINESS_CONFIG.brandName,
   domain: 'gulatiandsons.com',
-  contactEmail: 'concierge@gulatiandsons.com',
-  contactPhone: '+91 11 4982 0000',
-  supportWhatsApp: '+91 98110 00000',
+  contactEmail: BUSINESS_CONFIG.email,
+  contactPhone: BUSINESS_CONFIG.phone,
+  supportWhatsApp: BUSINESS_CONFIG.phone,
   currency: 'INR',
   currencySymbol: '₹',
   taxRate: 0.18, // 18% GST (already inclusive in retail price)
-  freeShippingThreshold: 5000,
+  freeShippingThreshold: BUSINESS_CONFIG.insuredDeliveryThreshold,
   standardShippingFee: 250,
   orderIdPrefix: 'GS-',
   maintenanceMode: false,
-  announcementText: 'Complimentary white-glove Pan-India delivery on orders above ₹5,000.',
+  announcementText: `Complimentary white-glove Pan-India delivery on orders above ₹${BUSINESS_CONFIG.insuredDeliveryThreshold.toLocaleString('en-IN')}.`,
   showAnnouncement: true,
   paymentMode: 'demo'
 };
+
 
 const DEFAULT_COUPONS: Coupon[] = [
   {
@@ -238,6 +241,8 @@ interface CommerceContextType {
   addReview: (review: Omit<Review, 'id' | 'date' | 'status'>) => void;
 
   updateSettings: (newSettings: Partial<StoreSettings>) => void;
+  founderContent: FounderContent;
+  updateFounderContent: (content: Partial<FounderContent>) => void;
   markNotificationRead: (id: string) => void;
   addAuditLog: (action: string, details: string) => void;
 }
@@ -255,6 +260,7 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
   const [reviews, setReviews] = useState<Review[]>(SEED_REVIEWS);
   const [cmsSections, setCmsSections] = useState<CmsSectionBlock[]>(INITIAL_CMS_SECTIONS);
   const [settings, setSettings] = useState<StoreSettings>(DEFAULT_SETTINGS);
+  const [founderContent, setFounderContent] = useState<FounderContent>(INITIAL_FOUNDER_CONTENT);
   const [auditLogs, setAuditLogs] = useState<AuditLogItem[]>([
     {
       id: 'log-1',
@@ -297,6 +303,9 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
 
       const savedSettings = localStorage.getItem('gs_settings');
       if (savedSettings) setSettings(JSON.parse(savedSettings));
+
+      const savedFounder = localStorage.getItem('gs_founder');
+      if (savedFounder) setFounderContent(JSON.parse(savedFounder));
     } catch {
       // Ignore local storage errors
     }
@@ -326,6 +335,28 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem('gs_products', JSON.stringify(products));
     } catch {}
   }, [products]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('gs_founder', JSON.stringify(founderContent));
+    } catch {}
+  }, [founderContent]);
+
+  const updateFounderContent = (newContent: Partial<FounderContent>) => {
+    setFounderContent((prev) => {
+      const updated = {
+        ...prev,
+        ...newContent,
+        updatedAt: '2026-10-11T12:00:00Z'
+      };
+      try {
+        localStorage.setItem('gs_founder', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+    addAuditLog('Founder Profile Updated', `Founder page content updated for Varun Gulati`);
+    showToast('Founder profile updated successfully.');
+  };
 
   const showToast = (msg: string) => {
     setActiveToast(msg);
@@ -691,6 +722,8 @@ export function CommerceProvider({ children }: { children: React.ReactNode }) {
         moderateReview,
         addReview,
         updateSettings,
+        founderContent,
+        updateFounderContent,
         markNotificationRead,
         addAuditLog
       }}

@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { BUSINESS_CONFIG } from '@/lib/config/business';
+
 
 export const metadata: Metadata = {
   title: 'Frequently Asked Questions | Gulati & Sons',
@@ -55,9 +57,13 @@ export default function FaqsPage() {
 
       <div className="pt-6 border-t border-[#CCC5B9]/80 text-xs font-sans text-center text-[#252522]/70">
         Require further clarification? Contact our concierge at{' '}
-        <Link href="/contact" className="text-[#51292D] underline font-medium">
-          concierge@gulatiandsons.com
-        </Link>
+        <a href={BUSINESS_CONFIG.emailMailtoLink} className="text-[#51292D] underline font-medium">
+          {BUSINESS_CONFIG.email}
+        </a>{' '}
+        or call{' '}
+        <a href={BUSINESS_CONFIG.phoneTelLink} className="text-[#51292D] underline font-medium">
+          {BUSINESS_CONFIG.phoneFormatted}
+        </a>.
       </div>
     </div>
   );

@@ -39,7 +39,8 @@ import {
   HelpCircle,
   Tag,
   Star,
-  RefreshCw
+  RefreshCw,
+  UserCheck
 } from 'lucide-react';
 import { useCommerce } from '@/lib/store/commerceStore';
 import { useAuth } from '@/lib/store/authStore';
@@ -55,6 +56,7 @@ export default function SuperAdminDashboard() {
     coupons,
     reviews,
     cmsSections,
+    founderContent,
     settings,
     auditLogs,
     notifications,
@@ -67,6 +69,7 @@ export default function SuperAdminDashboard() {
     updatePaymentStatus,
     saveCmsSections,
     publishCms,
+    updateFounderContent,
     addCoupon,
     deleteCoupon,
     moderateReview,
@@ -81,6 +84,7 @@ export default function SuperAdminDashboard() {
   const [activeModule, setActiveModule] = useState<
     | 'home'
     | 'edit'
+    | 'founder'
     | 'orders'
     | 'users'
     | 'cart-users'
@@ -104,6 +108,15 @@ export default function SuperAdminDashboard() {
   const [selectedOrderForModal, setSelectedOrderForModal] = useState<Order | null>(null);
   const [selectedProductForEdit, setSelectedProductForEdit] = useState<Product | null>(null);
   const [editingCmsSection, setEditingCmsSection] = useState<CmsSectionBlock | null>(null);
+
+  // Founder CMS form state
+  const [founderForm, setFounderForm] = useState(founderContent);
+  useEffect(() => {
+    if (founderContent) {
+      setFounderForm(founderContent);
+    }
+  }, [founderContent]);
+
 
   // Order filters
   const [orderFilter, setOrderFilter] = useState<string>('all');
@@ -280,6 +293,16 @@ export default function SuperAdminDashboard() {
               >
                 <Edit className="w-4 h-4 text-[#A58B5F]" />
                 <span>Visual CMS Edit</span>
+              </button>
+
+              <button
+                onClick={() => setActiveModule('founder')}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-xs font-mono uppercase tracking-wider transition-colors ${
+                  activeModule === 'founder' ? 'bg-[#51292D] text-[#F3EFE6] font-medium' : 'hover:bg-[#252522]/50 text-[#E2D9C8]'
+                }`}
+              >
+                <UserCheck className="w-4 h-4 text-[#A58B5F]" />
+                <span>Founder CMS</span>
               </button>
 
               <button
@@ -504,7 +527,7 @@ export default function SuperAdminDashboard() {
                   Primary Action Portals
                 </span>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                   {/* Card 1: EDIT */}
                   <button
                     onClick={() => setActiveModule('edit')}
@@ -514,12 +537,26 @@ export default function SuperAdminDashboard() {
                     <div>
                       <h3 className="font-serif text-2xl font-medium">Edit</h3>
                       <p className="text-[11px] text-[#E2D9C8]/70 font-mono mt-1">
-                        Visual Website Pages & Section Blocks
+                        Visual Website Pages & Blocks
                       </p>
                     </div>
                   </button>
 
-                  {/* Card 2: ORDERS */}
+                  {/* Card 2: FOUNDER CMS */}
+                  <button
+                    onClick={() => setActiveModule('founder')}
+                    className="p-6 bg-[#3C2921] text-[#F3EFE6] border border-[#A58B5F]/40 shadow-lg text-left hover:bg-[#51292D] transition-all group flex flex-col justify-between h-44"
+                  >
+                    <UserCheck className="w-6 h-6 text-[#A58B5F] group-hover:scale-110 transition-transform" />
+                    <div>
+                      <h3 className="font-serif text-2xl font-medium">Founder</h3>
+                      <p className="text-[11px] text-[#E2D9C8]/70 font-mono mt-1">
+                        Varun Gulati Profile & Philosophy
+                      </p>
+                    </div>
+                  </button>
+
+                  {/* Card 3: ORDERS */}
                   <button
                     onClick={() => setActiveModule('orders')}
                     className="p-6 bg-[#3C2921] text-[#F3EFE6] border border-[#A58B5F]/40 shadow-lg text-left hover:bg-[#51292D] transition-all group flex flex-col justify-between h-44"
@@ -528,7 +565,7 @@ export default function SuperAdminDashboard() {
                     <div>
                       <h3 className="font-serif text-2xl font-medium">Orders</h3>
                       <p className="text-[11px] text-[#E2D9C8]/70 font-mono mt-1">
-                        Dispatch, Packing & Courier Handover
+                        Dispatch, Packing & Courier
                       </p>
                     </div>
                   </button>
@@ -878,6 +915,293 @@ export default function SuperAdminDashboard() {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* ============================================================== */}
+          {/* MODULE: FOUNDER CMS MANAGEMENT */}
+          {/* ============================================================== */}
+          {activeModule === 'founder' && (
+            <div className="space-y-8 max-w-6xl">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between border-b border-[#CCC5B9]/80 pb-4 gap-4">
+                <div>
+                  <span className="text-[11px] font-mono uppercase tracking-[0.25em] text-[#51292D] block">
+                    EDITORIAL CONTENT MANAGEMENT
+                  </span>
+                  <h1 className="font-serif text-3xl sm:text-4xl text-[#252522] font-normal mt-1">
+                    Founder Profile CMS
+                  </h1>
+                  <p className="font-sans text-xs sm:text-sm text-[#252522]/70 mt-1">
+                    Manage Varun Gulati&apos;s biographical narrative, philosophical tenets, direct personal statement, and SEO metadata.
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <a
+                    href="/founder"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-2 border border-[#51292D] text-[#51292D] hover:bg-[#51292D]/10 text-xs font-mono uppercase tracking-wider flex items-center gap-2 transition-colors"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>View Live Page</span>
+                  </a>
+                  <button
+                    onClick={() => {
+                      updateFounderContent(founderForm);
+                    }}
+                    className="px-6 py-2 bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider hover:bg-[#3C2921] transition-colors shadow-sm flex items-center gap-2"
+                  >
+                    <Check className="w-3.5 h-3.5" />
+                    <span>Save Founder Profile</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Founder Editor Form Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                {/* Left 2 Cols: Form Controls */}
+                <div className="lg:col-span-2 space-y-8">
+                  {/* Section 1: Identity */}
+                  <div className="p-6 bg-[#E2D9C8]/30 border border-[#CCC5B9] space-y-4 shadow-sm">
+                    <h3 className="font-serif text-lg text-[#252522] border-b border-[#CCC5B9]/60 pb-2 flex items-center gap-2">
+                      <UserCheck className="w-4 h-4 text-[#51292D]" />
+                      <span>1. Founder Identity & Header</span>
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                          Full Name
+                        </label>
+                        <input
+                          type="text"
+                          value={founderForm.name}
+                          onChange={(e) => setFounderForm({ ...founderForm, name: e.target.value })}
+                          className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-serif text-[#252522] focus:border-[#51292D] outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                          Official Title
+                        </label>
+                        <input
+                          type="text"
+                          value={founderForm.title}
+                          onChange={(e) => setFounderForm({ ...founderForm, title: e.target.value })}
+                          className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-sans text-[#252522] focus:border-[#51292D] outline-none"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                        Subtitle / Tagline
+                      </label>
+                      <input
+                        type="text"
+                        value={founderForm.subtitle}
+                        onChange={(e) => setFounderForm({ ...founderForm, subtitle: e.target.value })}
+                        className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-sans text-[#252522] focus:border-[#51292D] outline-none"
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                          Portrait Image URL
+                        </label>
+                        <input
+                          type="text"
+                          value={founderForm.heroImage}
+                          onChange={(e) => setFounderForm({ ...founderForm, heroImage: e.target.value })}
+                          className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-mono text-[#252522] focus:border-[#51292D] outline-none"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                          Image Alt Text
+                        </label>
+                        <input
+                          type="text"
+                          value={founderForm.imageAlt}
+                          onChange={(e) => setFounderForm({ ...founderForm, imageAlt: e.target.value })}
+                          className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-sans text-[#252522] focus:border-[#51292D] outline-none"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Section 2: Bio Paragraphs */}
+                  <div className="p-6 bg-[#E2D9C8]/30 border border-[#CCC5B9] space-y-4 shadow-sm">
+                    <h3 className="font-serif text-lg text-[#252522] border-b border-[#CCC5B9]/60 pb-2 flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-[#51292D]" />
+                      <span>2. Biographical Narrative</span>
+                    </h3>
+                    <p className="text-xs text-[#252522]/60">
+                      Restrained, authentic editorial narrative. Emphasizes curation and craft without fictional pedigree.
+                    </p>
+                    {founderForm.bioParagraphs.map((para, idx) => (
+                      <div key={idx}>
+                        <label className="block text-[11px] font-mono uppercase text-[#252522]/70 mb-1">
+                          Narrative Paragraph {idx + 1}
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={para}
+                          onChange={(e) => {
+                            const next = [...founderForm.bioParagraphs];
+                            next[idx] = e.target.value;
+                            setFounderForm({ ...founderForm, bioParagraphs: next });
+                          }}
+                          className="w-full p-2.5 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-sans text-[#252522] focus:border-[#51292D] outline-none leading-relaxed"
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Section 3: Philosophy Tenets */}
+                  <div className="p-6 bg-[#E2D9C8]/30 border border-[#CCC5B9] space-y-4 shadow-sm">
+                    <h3 className="font-serif text-lg text-[#252522] border-b border-[#CCC5B9]/60 pb-2 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#51292D]" />
+                      <span>3. Four Philosophy Tenets</span>
+                    </h3>
+                    <div className="space-y-4">
+                      {founderForm.philosophyPoints.map((point, idx) => (
+                        <div key={idx} className="p-3.5 bg-[#F3EFE6] border border-[#CCC5B9]/80 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono text-[#51292D] font-bold">0{idx + 1}.</span>
+                            <input
+                              type="text"
+                              value={point.title}
+                              onChange={(e) => {
+                                const next = [...founderForm.philosophyPoints];
+                                next[idx] = { ...next[idx], title: e.target.value };
+                                setFounderForm({ ...founderForm, philosophyPoints: next });
+                              }}
+                              className="w-full px-2 py-1 bg-white border border-[#CCC5B9] text-xs font-serif text-[#252522]"
+                              placeholder="Pillar title"
+                            />
+                          </div>
+                          <textarea
+                            rows={2}
+                            value={point.description}
+                            onChange={(e) => {
+                              const next = [...founderForm.philosophyPoints];
+                              next[idx] = { ...next[idx], description: e.target.value };
+                              setFounderForm({ ...founderForm, philosophyPoints: next });
+                            }}
+                            className="w-full p-2 bg-white border border-[#CCC5B9] text-xs font-sans text-[#252522]"
+                            placeholder="Pillar description"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Section 4: Personal Statement */}
+                  <div className="p-6 bg-[#E2D9C8]/30 border border-[#CCC5B9] space-y-4 shadow-sm">
+                    <h3 className="font-serif text-lg text-[#252522] border-b border-[#CCC5B9]/60 pb-2 flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4 text-[#51292D]" />
+                      <span>4. Personal Statement & Direct Note</span>
+                    </h3>
+                    <div>
+                      <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                        Highlighted Pull Quote / Personal Statement
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={founderForm.personalStatement}
+                        onChange={(e) => setFounderForm({ ...founderForm, personalStatement: e.target.value })}
+                        className="w-full p-2.5 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-serif italic text-[#252522]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                        Personal Note Headline
+                      </label>
+                      <input
+                        type="text"
+                        value={founderForm.personalStatementHeading}
+                        onChange={(e) => setFounderForm({ ...founderForm, personalStatementHeading: e.target.value })}
+                        className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-serif text-[#252522]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                        Personal Note Letter Body
+                      </label>
+                      <textarea
+                        rows={4}
+                        value={founderForm.personalStatementNote}
+                        onChange={(e) => setFounderForm({ ...founderForm, personalStatementNote: e.target.value })}
+                        className="w-full p-2.5 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-sans text-[#252522] leading-relaxed"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Section 5: SEO Fields */}
+                  <div className="p-6 bg-[#E2D9C8]/30 border border-[#CCC5B9] space-y-4 shadow-sm">
+                    <h3 className="font-serif text-lg text-[#252522] border-b border-[#CCC5B9]/60 pb-2 flex items-center gap-2">
+                      <Shield className="w-4 h-4 text-[#51292D]" />
+                      <span>5. Search & Social Metadata (SEO)</span>
+                    </h3>
+                    <div>
+                      <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                        Meta Title
+                      </label>
+                      <input
+                        type="text"
+                        value={founderForm.seoTitle}
+                        onChange={(e) => setFounderForm({ ...founderForm, seoTitle: e.target.value })}
+                        className="w-full px-3 py-2 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-mono text-[#252522]"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono uppercase text-[#252522]/70 mb-1">
+                        Meta Description
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={founderForm.seoDescription}
+                        onChange={(e) => setFounderForm({ ...founderForm, seoDescription: e.target.value })}
+                        className="w-full p-2.5 bg-[#F3EFE6] border border-[#CCC5B9] text-xs font-sans text-[#252522]"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right 1 Col: Live Visual Preview Card */}
+                <div className="space-y-6">
+                  <div className="p-6 bg-[#3C2921] text-[#F3EFE6] border border-[#A58B5F]/40 shadow-lg space-y-4 sticky top-6">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#A58B5F] block">
+                      Live Preview Snapshot
+                    </span>
+                    <div className="relative aspect-[3/4] w-full bg-[#252522] overflow-hidden border border-[#A58B5F]/30">
+                      <Image
+                        src={founderForm.heroImage || 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=1200&q=80'}
+                        alt={founderForm.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 300px"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-serif text-xl text-[#F3EFE6]">{founderForm.name}</h4>
+                      <p className="text-xs font-mono text-[#A58B5F]">{founderForm.title}</p>
+                      <p className="text-[11px] text-[#E2D9C8]/80 font-serif italic pt-2 border-t border-[#A58B5F]/20">
+                        &ldquo;{founderForm.personalStatement.slice(0, 110)}...&rdquo;
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        updateFounderContent(founderForm);
+                      }}
+                      className="w-full py-3 bg-[#51292D] text-[#F3EFE6] text-xs font-mono uppercase tracking-widest hover:bg-[#A58B5F] hover:text-[#252522] transition-colors mt-4 flex items-center justify-center gap-2"
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      <span>Save & Publish</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 

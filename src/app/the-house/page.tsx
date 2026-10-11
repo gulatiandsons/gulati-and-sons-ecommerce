@@ -62,6 +62,21 @@ export default function TheHousePage() {
         </span>
       </div>
 
+      {/* Founder Editorial Crosslink */}
+      <div className="p-8 bg-[#E2D9C8]/50 border border-[#CCC5B9] flex flex-col sm:flex-row items-center justify-between gap-6 max-w-3xl mx-auto">
+        <div className="space-y-1 text-center sm:text-left">
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#51292D]">The Founder Behind The House</span>
+          <h3 className="font-serif text-2xl text-[#252522]">Meet Varun Gulati</h3>
+          <p className="text-xs text-[#252522]/75 font-sans">Discover the personal style and craftsmanship philosophy behind the house.</p>
+        </div>
+        <Link
+          href="/founder"
+          className="px-6 py-3 bg-[#3C2921] text-[#F3EFE6] text-xs font-mono uppercase tracking-wider hover:bg-[#51292D] transition-colors whitespace-nowrap"
+        >
+          Discover The Founder &rarr;
+        </Link>
+      </div>
+
       {/* Next CTA */}
       <div className="pt-8 text-center">
         <Link

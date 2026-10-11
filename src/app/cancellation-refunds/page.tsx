@@ -1,5 +1,8 @@
 import React from 'react';
 import type { Metadata } from 'next';
+import Link from 'next/link';
+import { BUSINESS_CONFIG } from '@/lib/config/business';
+import { Mail, Phone } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Cancellation & Refunds | Gulati & Sons',
@@ -39,7 +42,23 @@ export default function CancellationRefundsPage() {
             If a parcel arrives damaged, please notify our concierge within 48 hours of delivery. Once verified, an immediate replacement piece or full reimbursement is sanctioned.
           </p>
         </section>
+
+        <div className="p-6 bg-[#E2D9C8]/40 border border-[#CCC5B9] mt-8 space-y-4">
+          <h3 className="font-serif text-lg text-[#252522]">Immediate Cancellation Inquiries</h3>
+          <p className="text-xs text-[#252522]/80">
+            For rapid dispatch interception, contact our desk directly with your Order Reference ID:
+          </p>
+          <div className="flex flex-wrap gap-6 pt-1 text-xs font-mono">
+            <a href={BUSINESS_CONFIG.phoneTelLink} className="text-[#51292D] hover:underline flex items-center gap-1.5">
+              <Phone className="w-3.5 h-3.5" /> {BUSINESS_CONFIG.phone}
+            </a>
+            <a href={BUSINESS_CONFIG.emailMailtoLink} className="text-[#51292D] hover:underline flex items-center gap-1.5">
+              <Mail className="w-3.5 h-3.5" /> {BUSINESS_CONFIG.email}
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+

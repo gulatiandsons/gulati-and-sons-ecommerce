@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { BUSINESS_CONFIG } from '@/lib/config/business';
 
 export const metadata: Metadata = {
   title: 'Returns & Exchanges | Gulati & Sons',
@@ -38,10 +39,14 @@ export default function ReturnsPage() {
           <h2 className="font-serif text-2xl text-[#252522]">Initiating a Return Request</h2>
           <p>
             To initiate a return or exchange, contact our Concierge Desk at{' '}
-            <a href="mailto:concierge@gulatiandsons.com" className="text-[#51292D] underline">
-              concierge@gulatiandsons.com
+            <a href={BUSINESS_CONFIG.emailMailtoLink} className="text-[#51292D] underline font-medium">
+              {BUSINESS_CONFIG.email}
             </a>{' '}
-            citing your Order Number and dispatch photographs if reporting transit defect.
+            or telephone{' '}
+            <a href={BUSINESS_CONFIG.phoneTelLink} className="text-[#51292D] underline font-medium">
+              {BUSINESS_CONFIG.phoneFormatted}
+            </a>{' '}
+            citing your Order Reference Number and dispatch photographs if reporting transit defect.
           </p>
         </section>
       </div>

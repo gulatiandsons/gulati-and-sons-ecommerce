@@ -204,3 +204,29 @@ export interface CmsSectionBlock {
   visible: boolean;
   order: number;
 }
+
+export interface FounderContent {
+  name: string;
+  role: string;
+  title: string;
+  subtitle: string;
+  heroImage: string;
+  portraitPlaceholderNote: string;
+  imageAlt?: string;
+  bioHeading: string;
+  bioParagraphs: string[];
+  philosophyHeading: string;
+  philosophySubheading: string;
+  philosophyPoints: {
+    title: string;
+    description: string;
+  }[];
+  personalStatementHeading: string;
+  personalStatement: string;
+  personalStatementNote: string;
+  collectionsIntro: string;
+  seoTitle: string;
+  seoDescription: string;
+  updatedAt: string;
+}
+

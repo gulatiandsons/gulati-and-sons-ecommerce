@@ -4,6 +4,8 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { BUSINESS_CONFIG } from '@/lib/config/business';
+
 export default function Footer() {
   return (
     <footer className="relative bg-[#3C2921] text-[#E2D9C8] overflow-hidden pt-12 pb-16 border-t border-[#A58B5F]/30">
@@ -37,11 +39,15 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 text-xs font-mono tracking-wider text-[#A58B5F]">
             <div>
               <span className="block text-[10px] text-[#E2D9C8]/50 uppercase">Concierge Desk</span>
-              <span className="text-[#E2D9C8]">+91 11 4982 0000</span>
+              <a href={BUSINESS_CONFIG.phoneTelLink} className="text-[#E2D9C8] hover:text-[#A58B5F] transition-colors">
+                {BUSINESS_CONFIG.phoneFormatted}
+              </a>
             </div>
             <div>
               <span className="block text-[10px] text-[#E2D9C8]/50 uppercase">Direct Inquiries</span>
-              <span className="text-[#E2D9C8]">concierge@gulatiandsons.com</span>
+              <a href={BUSINESS_CONFIG.emailMailtoLink} className="text-[#E2D9C8] hover:text-[#A58B5F] transition-colors">
+                {BUSINESS_CONFIG.email}
+              </a>
             </div>
           </div>
         </div>
@@ -64,6 +70,7 @@ export default function Footer() {
           <div>
             <h4 className="font-serif text-sm tracking-wider uppercase text-[#F3EFE6] mb-4">The House</h4>
             <ul className="space-y-2.5 text-[#E2D9C8]/75">
+              <li><Link href="/founder" className="hover:text-[#F3EFE6] transition-colors font-medium text-[#A58B5F]">The Founder</Link></li>
               <li><Link href="/the-house" className="hover:text-[#F3EFE6] transition-colors">Our Story</Link></li>
               <li><Link href="/our-philosophy" className="hover:text-[#F3EFE6] transition-colors">Selection Philosophy</Link></li>
               <li><Link href="/journal" className="hover:text-[#F3EFE6] transition-colors">Notes from the House</Link></li>

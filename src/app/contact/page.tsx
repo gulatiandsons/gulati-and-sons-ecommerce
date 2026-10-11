@@ -1,12 +1,16 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, CheckCircle2, Clock } from 'lucide-react';
+import { Mail, Phone, MapPin, CheckCircle2, Clock, MessageSquare } from 'lucide-react';
 import { useCommerce } from '@/lib/store/commerceStore';
+import { BUSINESS_CONFIG } from '@/lib/config/business';
 
 export default function ContactPage() {
   const { settings } = useCommerce();
   const [submitted, setSubmitted] = useState(false);
+
+  const contactEmail = settings.contactEmail || BUSINESS_CONFIG.email;
+  const contactPhone = settings.contactPhone || BUSINESS_CONFIG.phone;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,8 +46,8 @@ export default function ContactPage() {
               <Mail className="w-4 h-4 text-[#51292D] shrink-0 mt-0.5" />
               <div>
                 <span className="font-mono text-[#252522]/60 block uppercase">Electronic Correspondence</span>
-                <a href={`mailto:${settings.contactEmail}`} className="font-medium hover:underline text-[#252522]">
-                  {settings.contactEmail}
+                <a href={`mailto:${contactEmail}`} className="font-medium hover:underline text-[#252522]">
+                  {contactEmail}
                 </a>
               </div>
             </div>
@@ -52,8 +56,23 @@ export default function ContactPage() {
               <Phone className="w-4 h-4 text-[#51292D] shrink-0 mt-0.5" />
               <div>
                 <span className="font-mono text-[#252522]/60 block uppercase">Telephone Concierge</span>
-                <a href={`tel:${settings.contactPhone}`} className="font-medium hover:underline text-[#252522]">
-                  {settings.contactPhone}
+                <a href={`tel:${contactPhone.replace(/\s+/g, '')}`} className="font-medium hover:underline text-[#252522]">
+                  {contactPhone}
+                </a>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <MessageSquare className="w-4 h-4 text-[#51292D] shrink-0 mt-0.5" />
+              <div>
+                <span className="font-mono text-[#252522]/60 block uppercase">WhatsApp Direct</span>
+                <a
+                  href={BUSINESS_CONFIG.whatsAppLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium hover:underline text-[#34483D]"
+                >
+                  Message Concierge Desk &rarr;
                 </a>
               </div>
             </div>
@@ -62,7 +81,7 @@ export default function ContactPage() {
               <Clock className="w-4 h-4 text-[#51292D] shrink-0 mt-0.5" />
               <div>
                 <span className="font-mono text-[#252522]/60 block uppercase">Concierge Hours</span>
-                <p>Monday to Saturday, 10:00 to 19:00 IST</p>
+                <p>{BUSINESS_CONFIG.hours}</p>
               </div>
             </div>
 

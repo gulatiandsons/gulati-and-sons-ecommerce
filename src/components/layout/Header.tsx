@@ -298,6 +298,7 @@ export default function Header() {
                 <div>
                   <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#51292D] mb-3">Our Legacy</p>
                   <ul className="space-y-2 text-xs normal-case tracking-normal">
+                    <li><Link href="/founder" className="hover:text-[#51292D] font-medium text-[#51292D]">The Founder (Varun Gulati)</Link></li>
                     <li><Link href="/the-house" className="hover:text-[#51292D]">The Private House</Link></li>
                     <li><Link href="/our-philosophy" className="hover:text-[#51292D]">Selection Philosophy</Link></li>
                     <li><Link href="/journal" className="hover:text-[#51292D]">Notes from the House</Link></li>
@@ -383,6 +384,13 @@ export default function Header() {
                   className="block font-serif text-xl text-[#252522] hover:text-[#51292D]"
                 >
                   Clothing & Atelier
+                </Link>
+                <Link
+                  href="/founder"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block font-serif text-xl text-[#51292D] hover:text-[#252522]"
+                >
+                  The Founder (Varun Gulati)
                 </Link>
                 <Link
                   href="/the-house"
