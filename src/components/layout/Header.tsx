@@ -23,15 +23,16 @@ export default function Header() {
   }, []);
 
   const isHomepage = pathname === '/';
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 80) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      const scrolled = window.scrollY > 25;
+      setHasScrolled(scrolled);
+      setIsScrolled(scrolled);
     };
+
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -44,15 +45,17 @@ export default function Header() {
     setMobileMenuOpen(false);
   }, [pathname]);
 
-  // Determine styling: on homepage at top, transparent; otherwise solid warm ivory
-  const isTransparent = isHomepage && !isScrolled;
+  // Determine visibility & styling:
+  // On homepage before scrolling: completely hidden so opening video is 100% distraction-free.
+  // As soon as user scrolls: smoothly slides down and reveals with warm luxury ivory aesthetic.
+  const isHiddenOnInitialLoad = isHomepage && !hasScrolled;
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-40 transition-all duration-300 ${
-        isTransparent
-          ? 'bg-transparent text-[#F3EFE6]'
-          : 'bg-[#F3EFE6]/95 backdrop-blur-md text-[#252522] border-b border-[#A58B5F]/20 shadow-sm'
+      className={`fixed top-0 left-0 w-full z-40 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+        isHiddenOnInitialLoad
+          ? '-translate-y-full opacity-0 pointer-events-none'
+          : 'translate-y-0 opacity-100 pointer-events-auto bg-[#F3EFE6]/95 backdrop-blur-md text-[#252522] border-b border-[#A58B5F]/20 shadow-sm'
       }`}
     >
       {/* Top utility row */}
@@ -82,9 +85,7 @@ export default function Header() {
                 alt="Gulati & Sons - The Private House"
                 fill
                 priority
-                className={`object-contain transition-all duration-300 ${
-                  isTransparent ? 'brightness-125 drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]' : ''
-                }`}
+                className="object-contain transition-all duration-300"
                 sizes="(max-width: 640px) 112px, 128px"
               />
             </div>

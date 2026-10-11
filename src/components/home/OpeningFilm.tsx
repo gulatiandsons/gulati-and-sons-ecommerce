@@ -8,6 +8,13 @@ export default function OpeningFilm() {
   const [isPlaying, setIsPlaying] = useState(true);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [showCue, setShowCue] = useState(false);
+
+  useEffect(() => {
+    // Only fade in subtle scroll guide after patron has enjoyed initial opening film
+    const timer = setTimeout(() => setShowCue(true), 3500);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -95,92 +102,80 @@ export default function OpeningFilm() {
 
   return (
     <section
+      id="section-opening-film"
       aria-label="Cinematic Opening Film"
-      className="relative w-full h-screen min-h-[640px] bg-[#3C2921] overflow-hidden select-none"
+      className="relative w-full h-[100dvh] md:h-screen md:min-h-[640px] bg-[#161311] flex items-center justify-center overflow-hidden select-none"
     >
-      {/* Background Video */}
-      {!prefersReducedMotion ? (
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          onLoadedData={() => setVideoLoaded(true)}
-          onCanPlay={() => setVideoLoaded(true)}
-          onPlay={() => {
-            setIsPlaying(true);
-            setVideoLoaded(true);
-          }}
-          className="absolute inset-0 w-full h-full object-cover opacity-90 transition-opacity duration-700"
-          aria-hidden="true"
-        >
-          <source src="/video-loop.mp4" type="video/mp4" />
-        </video>
-      ) : null}
-
-      {/* Static Fallback Poster (Visible when video loading or reduced motion active) */}
-      <div
-        className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 -z-10 ${
-          videoLoaded && !prefersReducedMotion ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`}
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=1920&q=85')`
-        }}
-      />
-
-      {/* Cinematic Film Vignette & Subtle Warm Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#252522]/60 via-transparent to-[#252522]/80 pointer-events-none" />
-
-      {/* Minimal Editorial Overlay Controls (Section 00 Specification) */}
-      <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 pointer-events-none z-20">
-        {/* Top spacer for header */}
-        <div className="pt-20" />
-
-        {/* Bottom Utility Bar */}
-        <div className="flex items-end justify-between text-[#F3EFE6] pointer-events-auto">
-          {/* Bottom Left: Title label */}
-          <div className="space-y-1">
-            <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-[#A58B5F]">
-              THE OPENING FILM
-            </span>
-            <p className="font-serif text-base sm:text-lg text-[#F3EFE6]/90 tracking-wide">
-              A House of Character.
-            </p>
-          </div>
-
-          {/* Bottom Center: Scroll to discover */}
-          <button
-            onClick={scrollToHero}
-            className="hidden sm:flex flex-col items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#F3EFE6]/80 hover:text-[#F3EFE6] transition-colors -translate-x-6"
-            aria-label="Scroll to explore collection"
+      {/* Video Container:
+          - On mobile: Strictly horizontal 16:9 aspect ratio, object-contain, zero cropping, zero stretching, zero cutoff.
+          - On desktop: Full cinematic viewport cover.
+      */}
+      <div className="w-full aspect-[16/9] max-h-[100dvh] relative flex items-center justify-center md:absolute md:inset-0 md:w-full md:h-full md:max-h-none md:aspect-auto">
+        {!prefersReducedMotion ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            onLoadedData={() => setVideoLoaded(true)}
+            onCanPlay={() => setVideoLoaded(true)}
+            onPlay={() => {
+              setIsPlaying(true);
+              setVideoLoaded(true);
+            }}
+            className="w-full h-full object-contain md:object-cover opacity-95 transition-opacity duration-700"
+            aria-label="Gulati & Sons Opening Film"
           >
-            <span>Scroll to Discover</span>
-            <ChevronDown className="w-4 h-4 animate-bounce" />
-          </button>
+            <source src="/video-loop.mp4" type="video/mp4" />
+          </video>
+        ) : null}
 
-          {/* Bottom Right: Play / Pause Accessible Control */}
-          <div>
-            <button
-              onClick={togglePlayback}
-              className="flex items-center gap-2 px-3 py-1.5 bg-[#252522]/60 hover:bg-[#252522]/90 backdrop-blur-md border border-[#A58B5F]/40 text-[#F3EFE6] text-[11px] font-mono tracking-wider transition-colors"
-              aria-label={isPlaying ? 'Pause opening film' : 'Play opening film'}
-            >
-              {isPlaying ? (
-                <>
-                  <Pause className="w-3.5 h-3.5 text-[#A58B5F]" />
-                  <span>Pause</span>
-                </>
-              ) : (
-                <>
-                  <Play className="w-3.5 h-3.5 text-[#A58B5F]" />
-                  <span>Play</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
+        {/* Static Fallback Poster (Visible only when video is loading or reduced motion is active) */}
+        <div
+          className={`absolute inset-0 bg-contain md:bg-cover bg-center bg-no-repeat transition-opacity duration-1000 -z-10 ${
+            videoLoaded && !prefersReducedMotion ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
+          style={{
+            backgroundImage: `url('https://images.unsplash.com/photo-1547887537-6158d64c35b3?auto=format&fit=crop&w=1920&q=85')`
+          }}
+        />
+      </div>
+
+      {/* Subtle, unobtrusive playback control in bottom-right corner (revealed on subtle hover/focus) */}
+      <div className="absolute bottom-6 right-6 z-20 opacity-0 hover:opacity-100 focus-within:opacity-100 transition-opacity duration-500">
+        <button
+          onClick={togglePlayback}
+          className="flex items-center gap-2 px-3 py-1.5 bg-[#252522]/70 hover:bg-[#252522] backdrop-blur-md border border-[#A58B5F]/40 text-[#F3EFE6] text-[11px] font-mono tracking-wider transition-colors"
+          aria-label={isPlaying ? 'Pause film' : 'Play film'}
+        >
+          {isPlaying ? (
+            <>
+              <Pause className="w-3 h-3 text-[#A58B5F]" />
+              <span className="hidden sm:inline">Pause</span>
+            </>
+          ) : (
+            <>
+              <Play className="w-3 h-3 text-[#A58B5F]" />
+              <span className="hidden sm:inline">Play</span>
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Elegant, subtle scroll cue that glides in gently at the bottom center after opening playback */}
+      <div className={`absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-20 pointer-events-auto transition-opacity duration-1000 ${
+        showCue ? 'opacity-80' : 'opacity-0 pointer-events-none'
+      }`}>
+        <button
+          onClick={scrollToHero}
+          className="group flex flex-col items-center gap-1.5 text-[10px] sm:text-[11px] font-mono uppercase tracking-[0.25em] text-[#F3EFE6]/60 hover:text-[#F3EFE6] transition-colors"
+          aria-label="Scroll to discover collection"
+        >
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">Scroll</span>
+          <ChevronDown className="w-4 h-4 text-[#A58B5F]/80 group-hover:text-[#A58B5F] animate-bounce" />
+        </button>
       </div>
     </section>
   );
